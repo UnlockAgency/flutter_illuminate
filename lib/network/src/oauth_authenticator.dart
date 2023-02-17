@@ -1,10 +1,10 @@
-import 'package:common/common.dart';
+import 'package:illuminate/common.dart';
 import 'package:dio/dio.dart';
-import 'package:network/src/client.dart';
-import 'package:network/src/exceptions/exceptions.dart';
-import 'package:network/src/pkce.dart';
-import 'package:network/src/types.dart';
-import 'package:network/src/utils.dart';
+import 'package:illuminate/network/src/client.dart';
+import 'package:illuminate/network/src/exceptions/exceptions.dart';
+import 'package:illuminate/network/src/pkce.dart';
+import 'package:illuminate/network/src/types.dart';
+import 'package:illuminate/network/src/utils.dart';
 
 class OAuthAuthenticator {
   final OAuthConfig config;

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:ui/src/controls/simple_gesture_detector.dart';
+import 'package:illuminate/ui/src/controls/simple_gesture_detector.dart';
 
 class Tappable extends StatefulWidget {
   const Tappable({

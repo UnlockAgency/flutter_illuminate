@@ -1,4 +1,4 @@
-import 'package:network/src/pkce.dart';
+import 'package:illuminate/network/src/pkce.dart';
 
 enum Authentication { none, oauth2 }
 

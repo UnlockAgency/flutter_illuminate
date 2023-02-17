@@ -7,6 +7,7 @@ class AppLock extends StatefulWidget {
   final GoRouter router;
   final String lockScreenRoute;
   final String lockScreenRouteName;
+  final Future<bool> Function() shouldTriggerLockScreen;
 
   final bool enabled;
   final Duration backgroundLockLatency;
@@ -17,6 +18,7 @@ class AppLock extends StatefulWidget {
     required this.router,
     required this.lockScreenRoute,
     required this.lockScreenRouteName,
+    required this.shouldTriggerLockScreen,
     this.enabled = true,
     this.backgroundLockLatency = const Duration(seconds: 5),
   }) : super(key: key);
@@ -44,7 +46,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (!_enabled) {
       return;
     }
@@ -62,6 +64,14 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       _backgroundLockLatencyTimer?.cancel();
 
       print("[AppLock] _isUnlocked: $_isUnlocked");
+
+      bool shouldTriggerLockScreen = await widget.shouldTriggerLockScreen();
+      print("[AppLock] Should trigger lockScreen: $shouldTriggerLockScreen");
+
+      // Check if we need to show a lockscreen (for instance, when the user hasn't configured a code yet)
+      if (shouldTriggerLockScreen == false) {
+        _isUnlocked = true;
+      }
 
       if (!_isUnlocked) {
         showLockScreen();

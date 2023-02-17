@@ -65,4 +65,9 @@ class SecurityManager {
 
     return code == savedCode;
   }
+
+  Future<void> reset() async {
+    await storageManager.delete(StorageKey.pincode.value);
+    await storageManager.delete(StorageKey.securityType.value);
+  }
 }
