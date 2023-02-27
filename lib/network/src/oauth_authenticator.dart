@@ -87,26 +87,60 @@ class OAuthAuthenticator {
 
     try {
       Response response = await _tokenClient.request(requestObject);
-      Map<String, dynamic>? data = tryCast<Map<String, dynamic>>(response.data);
 
-      if (data == null) {
-        throw OAuthSignInFailureException(message: 'Authorization response is not valid');
-      }
-
-      String? accessToken = tryCast<String>(data['access_token']);
-      String? refreshToken = tryCast<String>(data['refresh_token']);
-
-      if (accessToken == null || refreshToken == null) {
-        throw OAuthSignInFailureException(message: 'Response does not contain an access and/or refresh token');
-      }
-
-      await storageManager.write(storageKeyAccessToken, accessToken);
-      await storageManager.write(storageKeyRefreshToken, refreshToken);
+      _storeTokens(response);
 
       return response;
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<String> refreshToken() async {
+    final token = await storageManager.read(storageKeyRefreshToken);
+
+    Map<String, dynamic> body = {
+      'grant_type': 'refresh_token',
+      'client_id': config.clientId,
+      'refresh_token': token,
+    };
+
+    if (config.clientSecret != null) {
+      body['client_secret'] = config.clientSecret;
+    }
+
+    Request requestObject = Request(
+      path: config.tokenEndpoint,
+      httpMethod: HttpMethod.post,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    );
+
+    Response response = await _tokenClient.request(requestObject);
+
+    return await _storeTokens(response);
+  }
+
+  Future<String> _storeTokens(Response response) async {
+    Map<String, dynamic>? data = tryCast<Map<String, dynamic>>(response.data);
+
+    if (data == null) {
+      throw OAuthSignInFailureException(message: 'Authorization response is not valid');
+    }
+
+    String? accessToken = tryCast<String>(data['access_token']);
+    String? refreshToken = tryCast<String>(data['refresh_token']);
+
+    if (accessToken == null || refreshToken == null) {
+      throw OAuthSignInFailureException(message: 'Response does not contain an access and/or refresh token');
+    }
+
+    await storageManager.write(storageKeyAccessToken, accessToken);
+    await storageManager.write(storageKeyRefreshToken, refreshToken);
+
+    return accessToken;
   }
 
   Future<void> signOut() async {

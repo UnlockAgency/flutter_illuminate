@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
+import 'package:illuminate/network/src/oauth_authenticator.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
 
@@ -9,6 +10,8 @@ class Client {
   final ApiConfig config;
   late Future<void> Function(Object exception, StackTrace stackTrace)? exceptionHandler;
   late Dio _dioClient;
+
+  late OAuthAuthenticator? oAuthAuthenticator;
 
   Client(this.config, {this.exceptionHandler}) {
     _dioClient = Dio(
@@ -18,8 +21,16 @@ class Client {
       ),
     );
 
-    if (config.oAuthConfig != null) {
-      _dioClient.interceptors.add(AuthenticationInterceptor(config.oAuthConfig!));
+    final oAuthConfig = config.oAuthConfig;
+    if (oAuthConfig != null) {
+      oAuthAuthenticator = OAuthAuthenticator(host: oAuthConfig.host, config: oAuthConfig);
+
+      _dioClient.interceptors.add(
+        AuthenticationInterceptor(
+          client: this,
+          authenticator: oAuthAuthenticator!,
+        ),
+      );
     }
   }
 
@@ -57,5 +68,17 @@ class Client {
 
       rethrow;
     }
+  }
+
+  Future<String?> getAccessToken() async {
+    return await storageManager.read(storageKeyAccessToken);
+  }
+
+  Future<String> refreshToken() async {
+    if (oAuthAuthenticator == null) {
+      throw ArgumentError.value(config.oAuthConfig, 'OAuthConfig', "There's not OAuthConfig present");
+    }
+
+    return await oAuthAuthenticator!.refreshToken();
   }
 }

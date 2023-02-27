@@ -1,14 +1,26 @@
+import 'package:illuminate/common.dart';
 import 'package:illuminate/network/src/pkce.dart';
 
 enum Authentication { none, oauth2 }
 
-enum HttpMethod { options, get, post, put, patch, delete }
+enum HttpMethod {
+  options,
+  get,
+  post,
+  put,
+  patch,
+  delete;
+
+  static HttpMethod? fromString(String value) {
+    return values.firstOrNull((type) => type.name.toLowerCase() == value.toLowerCase());
+  }
+}
 
 class Request {
   final HttpMethod httpMethod;
   final String path;
   final Map<String, dynamic>? body;
-  final Map<String, dynamic>? query;
+  Map<String, dynamic>? query;
   Map<String, dynamic>? headers;
   final Authentication authentication;
 
