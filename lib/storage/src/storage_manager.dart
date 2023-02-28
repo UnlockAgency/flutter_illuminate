@@ -17,10 +17,11 @@ class StorageManager {
         accountName: iosConfig?.accountName,
       ),
       aOptions: AndroidOptions(
-        sharedPreferencesName: androidConfig?.sharedPreferencesName,
-        encryptedSharedPreferences: androidConfig?.encryptedSharedPreferences ?? false,
-        resetOnError: androidConfig?.resetOnError ?? false,
-      ),
+          // TODO:check why it's not working
+          // sharedPreferencesName: androidConfig?.sharedPreferencesName,
+          // encryptedSharedPreferences: androidConfig?.encryptedSharedPreferences ?? false,
+          // resetOnError: androidConfig?.resetOnError ?? false,
+          ),
     );
   }
 
