@@ -35,8 +35,6 @@ class Client {
   }
 
   Future<Response> request(Request request) async {
-    logger.d('[REQ] ${request.httpMethod.name.toUpperCase()} ${request.path}, query: ${request.query}, body: ${request.body}, headers: ${request.headers}');
-
     try {
       Response response = await _dioClient.request(
         request.path,
@@ -53,7 +51,10 @@ class Client {
       );
 
       try {
-        response.data = jsonDecode(response.data);
+        // Sometimes, we're still getting a parsed response from DIO.
+        // For instance, when we're refreshing a token in the interceptor.
+        // So, to be sure, check before decoding JSON if i's value is in fact a string.
+        response.data = response.data is String ? jsonDecode(response.data) : response.data;
       } on FormatException catch (_) {
         logger.w('[REQ] Response couldn\'t be decoded to json, using plain text as fallback');
       }

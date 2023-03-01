@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:illuminate/common.dart';
 import 'package:illuminate/network.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'dart:math';
@@ -93,16 +92,21 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
   void _requestLog(RequestOptions options, {int attempt = 1}) {
     String? requestId = options.extra['id'];
-    logger.i('REQUEST[${requestId ?? '<no id>'}] #$attempt => PATH: ${options.path}');
+    final optionsCopy = options;
+    optionsCopy.headers.remove('Authorization');
+
+    logger.i('REQUEST[${requestId ?? '<no id>'}] #$attempt => Path: ${options.path}, query: ${options.queryParameters}');
+    logger.i('REQUEST[${requestId ?? '<no id>'}] #$attempt => Headers: ${optionsCopy.headers}');
+    logger.i('REQUEST[${requestId ?? '<no id>'}] #$attempt => Body: ${options.data}');
   }
 
   void _errorLog(DioError error) {
     String? requestId = error.requestOptions.extra['id'];
-    logger.e('ERROR[${requestId ?? '<no id>'}] => PATH: ${error.requestOptions.path}');
+    logger.e('ERROR[${requestId ?? '<no id>'}] => Path: ${error.requestOptions.path}');
   }
 
   void _responseLog(Response response) {
     String? requestId = response.requestOptions.extra['id'];
-    logger.i('RESPONSE[${requestId ?? '<no id>'}] => PATH: ${response.requestOptions.path}, content: ${response.data}');
+    logger.i('RESPONSE[${requestId ?? '<no id>'}] => Path: ${response.requestOptions.path}, content: ${response.data}');
   }
 }

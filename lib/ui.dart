@@ -3,7 +3,7 @@ library illuminate;
 export 'ui/src/flex/spaced_column.dart' show SpacedColumn;
 export 'ui/src/flex/spaced_row.dart' show SpacedRow;
 
-export 'ui/src/controls/simple_gesture_detector.dart' show SimpleGestureDetector;
+export 'ui/src/controls/simple_gesture_detector.dart' show SimpleGestureDetector, GestureDetectorConfig, GestureDetectorMode;
 export 'ui/src/controls/tappable.dart' show Tappable;
 
 export 'ui/src/pickers/bottom_sheet_picker.dart' show BottomSheetPicker, BottomSheetStrings;

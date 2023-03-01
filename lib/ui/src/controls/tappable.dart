@@ -6,11 +6,15 @@ class Tappable extends StatefulWidget {
   const Tappable({
     required this.child,
     this.onTap,
+    this.gestureDetectorConfig,
     super.key,
   });
 
   final Widget child;
   final void Function()? onTap;
+
+  /// Specific configuration for iOS
+  final GestureDetectorConfig? gestureDetectorConfig;
 
   @override
   State<Tappable> createState() => _TappableState();
@@ -27,6 +31,7 @@ class _TappableState extends State<Tappable> {
       return SimpleGestureDetector(
         onTap: widget.onTap,
         enabled: _enabled,
+        config: widget.gestureDetectorConfig ?? const GestureDetectorConfig(),
         child: widget.child,
       );
     }
