@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
+import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/oauth_authenticator.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
@@ -21,13 +23,15 @@ class Client {
       ),
     );
 
+    _dioClient.interceptors.add(LoggerInterceptor());
+
     final oAuthConfig = config.oAuthConfig;
     if (oAuthConfig != null) {
       oAuthAuthenticator = OAuthAuthenticator(host: oAuthConfig.host, config: oAuthConfig);
 
       _dioClient.interceptors.add(
         AuthenticationInterceptor(
-          client: this,
+          config: config,
           authenticator: oAuthAuthenticator!,
         ),
       );
@@ -36,6 +40,8 @@ class Client {
 
   Future<Response> request(Request request) async {
     try {
+      String requestId = _requestId();
+
       Response response = await _dioClient.request(
         request.path,
         data: request.body,
@@ -45,6 +51,7 @@ class Client {
           headers: request.headers,
           responseType: ResponseType.plain,
           extra: {
+            'id': requestId,
             'authentication': request.authentication.name,
           },
         ),
@@ -81,5 +88,14 @@ class Client {
     }
 
     return await oAuthAuthenticator!.refreshToken();
+  }
+
+  String _requestId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    Random random = Random();
+
+    return String.fromCharCodes(
+      Iterable.generate(4, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+    );
   }
 }
