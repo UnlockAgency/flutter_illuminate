@@ -13,13 +13,19 @@ class LoggerInterceptor extends QueuedInterceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    responseLog(response);
+    int statusCode = response.statusCode ?? 0;
+    if (statusCode < 200 || statusCode >= 300) {
+      errorLog(response.requestOptions);
+    } else {
+      responseLog(response);
+    }
+
     handler.next(response);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    errorLog(err);
+    errorLog(err.requestOptions);
     handler.next(err);
   }
 
@@ -35,9 +41,9 @@ class LoggerInterceptor extends QueuedInterceptor {
     logger.i('REQUEST[${requestId ?? '<no id>'}] #$attempt => Body: ${options.data}');
   }
 
-  static void errorLog(DioError error) {
-    String? requestId = error.requestOptions.extra['id'];
-    logger.e('ERROR[${requestId ?? '<no id>'}] => Path: ${error.requestOptions.path}');
+  static void errorLog(RequestOptions requestOptions) {
+    String? requestId = requestOptions.extra['id'];
+    logger.e('ERROR[${requestId ?? '<no id>'}] => Path: ${requestOptions.path}');
   }
 
   static void responseLog(Response response) {

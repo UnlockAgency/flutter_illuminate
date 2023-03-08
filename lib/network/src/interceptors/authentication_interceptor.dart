@@ -41,7 +41,32 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    handler.next(response);
+    String? requestId = response.requestOptions.extra['id'];
+
+    // Check the response code
+    int statusCode = response.statusCode ?? 0;
+    if (statusCode >= 200 && statusCode < 300) {
+      handler.next(response);
+      return;
+    }
+
+    if (statusCode != 401) {
+      // Let the client convert it to a ResponseException
+      handler.next(response);
+      return;
+    }
+
+    // Try to refresh the token
+    _refreshToken(requestOptions: response.requestOptions, requestId: requestId).then((response) {
+      LoggerInterceptor.responseLog(response);
+
+      handler.next(response);
+    }).catchError((error) {
+      logger.e('ERROR[$requestId] => Error getting refresh token from storage: $error');
+
+      // Resolve the original response
+      handler.next(response);
+    });
   }
 
   @override
@@ -54,17 +79,21 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       return;
     }
 
-    authenticator.refreshToken().then((token) {
-      logger.i('RESPONSE[$requestId] => Received new access token');
-
-      return _retryRequest(err.requestOptions, token);
-    }).then((response) {
+    _refreshToken(requestOptions: err.requestOptions, requestId: requestId).then((response) {
       LoggerInterceptor.responseLog(response);
 
       handler.resolve(response);
     }).catchError((error) {
       logger.e('ERROR[$requestId] => Error getting refresh token from storage: $error');
       handler.next(err);
+    });
+  }
+
+  Future<Response<dynamic>> _refreshToken({required RequestOptions requestOptions, String? requestId}) {
+    return authenticator.refreshToken().then((token) {
+      logger.i('RESPONSE[$requestId] => Received new access token');
+
+      return _retryRequest(requestOptions, token);
     });
   }
 
