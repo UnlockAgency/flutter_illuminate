@@ -28,3 +28,18 @@ class OAuthSignInCanceledException implements Exception {
     return '[OAuthSignInCanceledException]';
   }
 }
+
+class ResponseException implements Exception {
+  final int statusCode;
+  final dynamic data;
+
+  ResponseException({
+    required this.statusCode,
+    required this.data,
+  });
+
+  @override
+  String toString() {
+    return '[ResponseException] { statusCode: $statusCode, data: $data }';
+  }
+}

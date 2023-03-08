@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:illuminate/network/src/exceptions/exceptions.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/oauth_authenticator.dart';
@@ -20,6 +21,8 @@ class Client {
       BaseOptions(
         baseUrl: config.host,
         responseType: ResponseType.plain,
+        // This prevents exceptions without response body when the status code isn't 2XX
+        validateStatus: (_) => true,
       ),
     );
 
@@ -57,6 +60,11 @@ class Client {
         ),
       );
 
+      int statusCode = response.statusCode ?? 0;
+      if (statusCode < 200 || statusCode >= 300) {
+        throw ResponseException(statusCode: statusCode, data: response.data);
+      }
+
       try {
         // Sometimes, we're still getting a parsed response from DIO.
         // For instance, when we're refreshing a token in the interceptor.
@@ -67,8 +75,16 @@ class Client {
       }
 
       return response;
+    } on ResponseException catch (exception, stacktrace) {
+      logger.e('Response error', exception, stacktrace);
+
+      if (exceptionHandler != null) {
+        await exceptionHandler!(exception, stacktrace);
+      }
+
+      rethrow;
     } catch (exception, stacktrace) {
-      logger.e('Cought: $exception\n\n$stacktrace');
+      logger.e('Cought request error', exception, stacktrace);
 
       if (exceptionHandler != null) {
         await exceptionHandler!(exception, stacktrace);
