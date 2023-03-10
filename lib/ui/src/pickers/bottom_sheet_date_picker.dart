@@ -9,6 +9,8 @@ class BottomSheetDatePicker extends StatefulWidget {
   final EdgeInsets? padding;
   final int? minimumYear;
   final int? maximumYear;
+  final DateTime? minimumDate;
+  final DateTime? maximumDate;
 
   const BottomSheetDatePicker({
     required this.onConfirm,
@@ -18,6 +20,8 @@ class BottomSheetDatePicker extends StatefulWidget {
     this.padding,
     this.minimumYear,
     this.maximumYear,
+    this.minimumDate,
+    this.maximumDate,
     super.key,
   });
 
@@ -50,6 +54,8 @@ class _BottomSheetDatePickerState extends State<BottomSheetDatePicker> with Safe
         initialDateTime: widget.selected ?? DateTime.now(),
         minimumYear: widget.minimumYear ?? 1,
         maximumYear: widget.maximumYear,
+        minimumDate: widget.minimumDate,
+        maximumDate: widget.maximumDate,
       ),
     );
   }
