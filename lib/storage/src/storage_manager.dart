@@ -66,6 +66,10 @@ class StorageManager {
       key: _key(key),
     );
   }
+
+  Future<void> deleteAll() async {
+    return await _storage.deleteAll();
+  }
 }
 
 class AndroidConfig {
