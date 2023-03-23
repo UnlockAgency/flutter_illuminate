@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:illuminate/ui/src/pickers/bottom_sheet_picker.dart';
 import 'package:illuminate/ui.dart';
 
 class BottomSheetTimePicker extends StatefulWidget {
@@ -36,6 +35,15 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
 
   @override
   Widget build(BuildContext context) {
+    final date = widget.selected ?? DateTime.now();
+    final initialDate = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      (date.minute % widget.minuteInterval * widget.minuteInterval).toInt(),
+    );
+
     return BottomSheetPicker(
       onConfirm: () {
         widget.onConfirm(_date);
@@ -46,7 +54,7 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
         onDateTimeChanged: (value) {
           setState(() => _date = value);
         },
-        initialDateTime: widget.selected ?? DateTime.now(),
+        initialDateTime: initialDate,
         minuteInterval: widget.minuteInterval,
       ),
     );
