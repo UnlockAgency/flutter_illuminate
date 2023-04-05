@@ -30,7 +30,16 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
   void initState() {
     super.initState();
 
-    setState(() => _date = widget.selected ?? DateTime.now());
+    final date = widget.selected ?? DateTime.now();
+    final initialDate = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      (date.minute % widget.minuteInterval * widget.minuteInterval).toInt(),
+    );
+
+    setState(() => _date = initialDate);
   }
 
   @override

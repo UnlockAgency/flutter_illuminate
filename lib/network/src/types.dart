@@ -19,7 +19,7 @@ enum HttpMethod {
 class Request {
   final HttpMethod httpMethod;
   final String path;
-  final Map<String, dynamic>? body;
+  final dynamic body;
   Map<String, dynamic>? query;
   Map<String, dynamic>? headers;
   final Authentication authentication;
