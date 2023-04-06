@@ -32,6 +32,7 @@ class AppLock extends StatefulWidget {
 class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   late bool _isUnlocked;
   late bool _enabled;
+  AppLifecycleState? _previousState;
 
   Timer? _backgroundLockLatencyTimer;
 
@@ -51,9 +52,15 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       return;
     }
 
+    if (_previousState == state) {
+      return;
+    }
+
     print("[Lifecycle] $state");
 
     if (state == AppLifecycleState.paused) {
+      print("[AppLock] going to lock app after ${widget.backgroundLockLatency.inSeconds} seconds");
+
       _backgroundLockLatencyTimer = Timer(widget.backgroundLockLatency, () {
         print("[AppLock] _isUnlocked = false");
         _isUnlocked = false;
@@ -77,6 +84,8 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
         showLockScreen();
       }
     }
+
+    _previousState = state;
 
     super.didChangeAppLifecycleState(state);
   }

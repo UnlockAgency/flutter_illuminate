@@ -25,13 +25,14 @@ class BottomSheetTimePicker extends StatefulWidget {
 
 class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with SafeAreaMixin {
   late DateTime _date;
+  late final DateTime _initialDate;
 
   @override
   void initState() {
     super.initState();
 
     final date = widget.selected ?? DateTime.now();
-    final initialDate = DateTime(
+    _initialDate = DateTime(
       date.year,
       date.month,
       date.day,
@@ -39,20 +40,11 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
       (date.minute % widget.minuteInterval * widget.minuteInterval).toInt(),
     );
 
-    setState(() => _date = initialDate);
+    setState(() => _date = _initialDate);
   }
 
   @override
   Widget build(BuildContext context) {
-    final date = widget.selected ?? DateTime.now();
-    final initialDate = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      date.hour,
-      (date.minute % widget.minuteInterval * widget.minuteInterval).toInt(),
-    );
-
     return BottomSheetPicker(
       onConfirm: () {
         widget.onConfirm(_date);
@@ -63,7 +55,7 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
         onDateTimeChanged: (value) {
           setState(() => _date = value);
         },
-        initialDateTime: initialDate,
+        initialDateTime: _initialDate,
         minuteInterval: widget.minuteInterval,
       ),
     );
