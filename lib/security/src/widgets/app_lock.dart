@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,10 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
     _enabled = widget.enabled;
 
     super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _triggerLockscreen();
+    });
   }
 
   @override
@@ -68,21 +73,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
     }
 
     if (state == AppLifecycleState.resumed) {
-      _backgroundLockLatencyTimer?.cancel();
-
-      print("[AppLock] _isUnlocked: $_isUnlocked");
-
-      bool shouldTriggerLockScreen = await widget.shouldTriggerLockScreen();
-      print("[AppLock] Should trigger lockScreen: $shouldTriggerLockScreen");
-
-      // Check if we need to show a lockscreen (for instance, when the user hasn't configured a code yet)
-      if (shouldTriggerLockScreen == false) {
-        _isUnlocked = true;
-      }
-
-      if (!_isUnlocked) {
-        showLockScreen();
-      }
+      await _triggerLockscreen();
     }
 
     _previousState = state;
@@ -102,6 +93,24 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  Future<void> _triggerLockscreen() async {
+    _backgroundLockLatencyTimer?.cancel();
+
+    print("[AppLock] _isUnlocked: $_isUnlocked");
+
+    bool shouldTriggerLockScreen = await widget.shouldTriggerLockScreen();
+    print("[AppLock] Should trigger lockScreen: $shouldTriggerLockScreen");
+
+    // Check if we need to show a lockscreen (for instance, when the user hasn't configured a code yet)
+    if (shouldTriggerLockScreen == false) {
+      _isUnlocked = true;
+    }
+
+    if (!_isUnlocked) {
+      showLockScreen();
+    }
   }
 
   /// Makes sure that [AppLock] shows the [lockScreen] on subsequent app pauses if
