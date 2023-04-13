@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 // Try casting an object and return null if it fails
 T? tryCast<T>(dynamic object) => object is T ? object : null;
 
@@ -13,4 +15,16 @@ List<T> tryCastList<T>(dynamic object) {
       )
       .cast<T>()
       .toList();
+}
+
+Future<void> openExternally(String urlString) async {
+  Uri? url = Uri.tryParse(urlString);
+
+  if (url == null) {
+    return;
+  }
+
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
 }
