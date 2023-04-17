@@ -1,7 +1,7 @@
 import 'package:illuminate/common.dart';
 import 'package:illuminate/network/src/pkce.dart';
 
-enum Authentication { none, oauth2 }
+enum Authentication { none, oauth2, bearerToken }
 
 enum HttpMethod {
   options,

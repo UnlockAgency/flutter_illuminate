@@ -2,16 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:illuminate/network.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/utils.dart';
-import 'dart:math';
 
 class AuthenticationInterceptor extends QueuedInterceptor {
   late Dio _dioClient;
 
-  final OAuthAuthenticator authenticator;
+  final OAuthAuthenticator? authenticator;
+  final Future<void> Function()? onAuthenticationFailure;
 
   AuthenticationInterceptor({
     required ApiConfig config,
-    required this.authenticator,
+    this.authenticator,
+    this.onAuthenticationFailure,
   }) {
     _dioClient = Dio(
       BaseOptions(
@@ -25,7 +26,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     String? requestId = options.extra['id'];
 
-    if (options.extra['authentication'] != Authentication.oauth2.name) {
+    if (options.extra['authentication'] != Authentication.oauth2.name && options.extra['authentication'] != Authentication.bearerToken.name) {
       handler.next(options);
       return;
     }
@@ -35,6 +36,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       logger.d('REQUEST[$requestId] => Authorization: Bearer $token');
       handler.next(options);
     }).catchError((e) {
+      logger.e('Unable to read access token', e);
       handler.next(options);
     });
   }
@@ -42,6 +44,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     String? requestId = response.requestOptions.extra['id'];
+    String? authentication = response.requestOptions.extra['authentication'];
 
     // Check the response code
     int statusCode = response.statusCode ?? 0;
@@ -52,6 +55,16 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
     if (statusCode != 401) {
       // Let the client convert it to a ResponseException
+      handler.next(response);
+      return;
+    }
+
+    if (authentication != Authentication.oauth2.name) {
+      // OAuth flow isn't used, it's a plain bearer token
+      if (onAuthenticationFailure != null) {
+        onAuthenticationFailure!();
+      }
+
       handler.next(response);
       return;
     }
@@ -72,9 +85,20 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     String? requestId = err.requestOptions.extra['id'];
+    String? authentication = err.requestOptions.extra['authentication'];
 
     // Check if the access token has expired
     if (!(err.response?.statusCode == 401)) {
+      handler.next(err);
+      return;
+    }
+
+    if (authentication != Authentication.oauth2.name) {
+      // OAuth flow isn't used, it's a plain bearer token
+      if (onAuthenticationFailure != null) {
+        onAuthenticationFailure!();
+      }
+
       handler.next(err);
       return;
     }
@@ -90,7 +114,11 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   }
 
   Future<Response<dynamic>> _refreshToken({required RequestOptions requestOptions, String? requestId}) {
-    return authenticator.refreshToken().then((token) {
+    if (authenticator == null) {
+      return Future.error(OAuthConfigurationException(message: 'OAuth not configured'));
+    }
+
+    return authenticator!.refreshToken().then((token) {
       logger.i('RESPONSE[$requestId] => Received new access token');
 
       return _retryRequest(requestOptions, token);

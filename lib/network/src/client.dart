@@ -29,16 +29,18 @@ class Client {
     _dioClient.interceptors.add(LoggerInterceptor());
 
     final oAuthConfig = config.oAuthConfig;
+    OAuthAuthenticator? oAuthAuthenticator;
     if (oAuthConfig != null) {
       oAuthAuthenticator = OAuthAuthenticator(host: oAuthConfig.host, config: oAuthConfig);
-
-      _dioClient.interceptors.add(
-        AuthenticationInterceptor(
-          config: config,
-          authenticator: oAuthAuthenticator!,
-        ),
-      );
     }
+
+    _dioClient.interceptors.add(
+      AuthenticationInterceptor(
+        config: config,
+        authenticator: oAuthAuthenticator,
+        onAuthenticationFailure: onAuthenticationFailure,
+      ),
+    );
   }
 
   Future<Response> request(Request request) async {
@@ -94,6 +96,10 @@ class Client {
     }
   }
 
+  Future<void> setAccessToken(String token) async {
+    await storageManager.write(storageKeyAccessToken, token);
+  }
+
   Future<String?> getAccessToken() async {
     return await storageManager.read(storageKeyAccessToken);
   }
@@ -104,6 +110,15 @@ class Client {
     }
 
     return await oAuthAuthenticator!.refreshToken();
+  }
+
+  Future<void> onAuthenticationFailure() async {
+    //
+  }
+
+  Future<void> clear() async {
+    await storageManager.delete(storageKeyAccessToken);
+    await storageManager.delete(storageKeyRefreshToken);
   }
 
   String _requestId() {
