@@ -15,3 +15,5 @@ export 'ui/src/mixins/safe_area_mixin.dart' show SafeAreaMixin, ContextAwareSafe
 
 export 'ui/src/misc/svg_asset.dart' show SvgAsset;
 export 'ui/src/misc/skeleton.dart' show Skeleton;
+
+export 'ui/src/dialogs/dialog_manager.dart' show DialogAction, DialogActionType, DialogManager, DialogService;
