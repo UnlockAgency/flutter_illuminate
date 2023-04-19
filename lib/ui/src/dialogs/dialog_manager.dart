@@ -8,7 +8,7 @@ class DialogAction {
   final String title;
   final void Function() onPressed;
 
-  DialogAction({
+  const DialogAction({
     required this.type,
     required this.title,
     required this.onPressed,
