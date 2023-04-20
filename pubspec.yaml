@@ -22,6 +22,7 @@ dependencies:
   provider: ^6.0.5
   url_launcher: ^6.1.10
   shimmer: ^2.0.0
+  firebase_dynamic_links: ^5.1.1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:illuminate/network/src/utils.dart';
+import 'package:illuminate/utils.dart';
 
 class LoggerInterceptor extends QueuedInterceptor {
   LoggerInterceptor();

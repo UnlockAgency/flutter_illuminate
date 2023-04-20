@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:illuminate/network.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/utils.dart';
+import 'package:illuminate/utils.dart';
 
 class AuthenticationInterceptor extends QueuedInterceptor {
   late Dio _dioClient;
