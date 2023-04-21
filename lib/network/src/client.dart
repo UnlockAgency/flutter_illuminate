@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:illuminate/network/src/exceptions/exceptions.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
@@ -8,6 +7,7 @@ import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/oauth_authenticator.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
+import 'package:illuminate/utils.dart';
 
 class Client {
   final ApiConfig config;
