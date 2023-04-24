@@ -14,7 +14,7 @@ class Client {
   late Future<void> Function(Object exception, StackTrace stackTrace)? exceptionHandler;
   late Dio _dioClient;
 
-  late OAuthAuthenticator? oAuthAuthenticator;
+  OAuthAuthenticator? _oAuthAuthenticator;
 
   Client(this.config, {this.exceptionHandler}) {
     _dioClient = Dio(
@@ -29,15 +29,14 @@ class Client {
     _dioClient.interceptors.add(LoggerInterceptor());
 
     final oAuthConfig = config.oAuthConfig;
-    OAuthAuthenticator? oAuthAuthenticator;
     if (oAuthConfig != null) {
-      oAuthAuthenticator = OAuthAuthenticator(host: oAuthConfig.host, config: oAuthConfig);
+      _oAuthAuthenticator = OAuthAuthenticator(host: oAuthConfig.host, config: oAuthConfig);
     }
 
     _dioClient.interceptors.add(
       AuthenticationInterceptor(
         config: config,
-        authenticator: oAuthAuthenticator,
+        authenticator: _oAuthAuthenticator,
         onAuthenticationFailure: onAuthenticationFailure,
       ),
     );
@@ -105,11 +104,11 @@ class Client {
   }
 
   Future<String> refreshToken() async {
-    if (oAuthAuthenticator == null) {
+    if (_oAuthAuthenticator == null) {
       throw ArgumentError.value(config.oAuthConfig, 'OAuthConfig', "There's not OAuthConfig present");
     }
 
-    return await oAuthAuthenticator!.refreshToken();
+    return await _oAuthAuthenticator!.refreshToken();
   }
 
   Future<void> onAuthenticationFailure() async {
