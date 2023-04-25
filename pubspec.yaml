@@ -18,7 +18,7 @@ dependencies:
   crypto: ^3.0.2
   dio: ^4.0.6
   go_router: ^6.0.1
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.5
   provider: ^6.0.5
   url_launcher: ^6.1.10
   shimmer: ^2.0.0

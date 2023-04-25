@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 extension IterableExtension<E> on Iterable<E> {
   E? firstOrNull(bool Function(E element) test) {
     for (E element in this) {
@@ -42,5 +44,16 @@ extension StringExtension on String {
     }
 
     return substring(0, length - characters.length);
+  }
+}
+
+extension ColorExtension on Color {
+  Map<int, Color> swatch() {
+    final map = <int, Color>{};
+    for (var alpha in [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]) {
+      map[(alpha * 1000).toInt()] = Color.fromRGBO(red, green, blue, alpha);
+    }
+
+    return map;
   }
 }
