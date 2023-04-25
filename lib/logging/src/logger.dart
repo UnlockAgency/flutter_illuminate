@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:googleapis/logging/v2.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:illuminate/common/src/helpers.dart';
@@ -18,6 +20,7 @@ class Logging {
     required String userIdentifier,
     Level level = Level.verbose,
     String? serviceAccount,
+    Map<String, String>? metadata,
   }) async {
     if (_logger != null) {
       return _logger!;
@@ -28,7 +31,8 @@ class Logging {
     _logger = Logger(
       filter: LoggingFilter(logLevel: level),
       printer: PrettyPrinter(
-        colors: true,
+        // Disable colors for iOS (rendering doesn't work properly) and also for release builds
+        colors: kDebugMode && Platform.isAndroid,
         noBoxingByDefault: true,
         methodCount: 0,
         printTime: true,
@@ -45,7 +49,7 @@ class Logging {
       await cloudLogger.initialize(serviceAccount);
 
       Logger.addLogListener((event) {
-        cloudLogger.logEvent(event.message);
+        cloudLogger.logEvent(event.message, labels: metadata);
       });
     }
 
@@ -86,11 +90,15 @@ class CloudLogger {
     _cloudLogger = LoggingApi(httpClient);
   }
 
-  Future<void> logEvent(String message) async {
+  Future<void> logEvent(String message, {Map<String, String>? labels = const {}}) async {
     final projectId = tryCast<String>(_serviceAccount?['project_id']);
     if (_cloudLogger == null || projectId == null) {
       return;
     }
+
+    final params = {
+      'id': id,
+    }..addAll(labels ?? {});
 
     final logEntry = LogEntry(
       logName: 'projects/$projectId/logs/app',
@@ -100,9 +108,7 @@ class CloudLogger {
       resource: MonitoredResource(
         type: 'global',
       ),
-      labels: {
-        'id': id,
-      },
+      labels: params,
     );
 
     final request = WriteLogEntriesRequest(
