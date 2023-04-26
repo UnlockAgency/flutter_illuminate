@@ -101,7 +101,14 @@ class DialogManager extends DialogService {
           isDefaultAction: action.type == DialogActionType.standard,
           isDestructiveAction: action.type == DialogActionType.destructive,
           onPressed: action.onPressed,
-          child: Text(action.title),
+          child: Text(
+            action.title,
+            style: action.type != DialogActionType.destructive
+                ? const TextStyle(
+                    color: CupertinoColors.activeBlue,
+                  )
+                : null,
+          ),
         );
       }).toList(),
     );
