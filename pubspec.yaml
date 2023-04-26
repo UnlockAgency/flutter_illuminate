@@ -2,7 +2,7 @@ publish_to: none
 
 name: illuminate
 description: A new Flutter package project.
-version: 1.2.0
+version: 1.2.3
 homepage:
 
 environment:
