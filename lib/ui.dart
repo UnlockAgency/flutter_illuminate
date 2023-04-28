@@ -17,5 +17,6 @@ export 'ui/src/misc/svg_asset.dart' show SvgAsset;
 export 'ui/src/misc/skeleton.dart' show Skeleton;
 export 'ui/src/misc/loading_stack.dart' show LoadingStack;
 export 'ui/src/misc/scroll_view_shader_mask.dart' show ScrollViewShaderMask;
+export 'ui/src/misc/dimensions_reserved_box.dart' show DimensionsReservedBox;
 
 export 'ui/src/dialogs/dialog_manager.dart' show DialogAction, DialogActionType, DialogManager, DialogService;
