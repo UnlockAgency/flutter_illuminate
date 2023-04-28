@@ -7,6 +7,20 @@ extension IterableExtension<E> on Iterable<E> {
     }
     return null;
   }
+
+  E? get optionalFirst {
+    if (isNotEmpty) {
+      return first;
+    }
+    return null;
+  }
+
+  E? get optionalLast {
+    if (isNotEmpty) {
+      return last;
+    }
+    return null;
+  }
 }
 
 extension ListExtension<E> on List<E> {
