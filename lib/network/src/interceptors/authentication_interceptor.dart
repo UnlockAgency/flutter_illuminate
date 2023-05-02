@@ -27,7 +27,8 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     String? requestId = options.extra['id'];
 
-    if (options.extra['authentication'] != Authentication.oauth2.name && options.extra['authentication'] != Authentication.bearerToken.name) {
+    if (options.extra['authentication'] != Authentication.oauth2.name &&
+        options.extra['authentication'] != Authentication.bearerToken.name) {
       handler.next(options);
       return;
     }

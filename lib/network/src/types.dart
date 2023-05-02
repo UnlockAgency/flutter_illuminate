@@ -20,6 +20,7 @@ class Request {
   final HttpMethod httpMethod;
   final String path;
   final dynamic body;
+  Map<String, dynamic>? extra;
   Map<String, dynamic>? query;
   Map<String, dynamic>? headers;
   final Authentication authentication;
@@ -28,6 +29,7 @@ class Request {
     required this.path,
     this.httpMethod = HttpMethod.get,
     this.body,
+    this.extra,
     this.query,
     this.headers,
     this.authentication = Authentication.none,

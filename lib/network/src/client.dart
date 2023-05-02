@@ -54,10 +54,11 @@ class Client {
           method: request.httpMethod.name,
           headers: request.headers,
           responseType: ResponseType.plain,
-          extra: {
-            'id': requestId,
-            'authentication': request.authentication.name,
-          },
+          extra: (request.extra ?? {})
+            ..addAll({
+              'id': requestId,
+              'authentication': request.authentication.name,
+            }),
         ),
       );
 
