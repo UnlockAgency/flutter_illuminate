@@ -68,16 +68,16 @@ Done? Commit and push the changes to Github and create a new release including t
 
 Extensions or helper methods to use inside your project. 
 
-[README](common/README.md)
+[README](lib/common/README.md)
 
 ## illuminate/core
 
 Access core functionality of the app, for instance the current lifecycle state.
 
-[README](core/README.md)
+[README](lib/core/README.md)
 
 ## illuminate/logging
 
 
 
-[README](logging/README.md)
+[README](lib/logging/README.md)
