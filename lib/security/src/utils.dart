@@ -10,5 +10,5 @@ final logger = Logger(
 );
 
 final storageManager = StorageManager(
-  prefix: 'oauth',
+  prefix: 'illuminate_security',
 );

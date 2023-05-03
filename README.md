@@ -78,6 +78,42 @@ Access core functionality of the app, for instance the current lifecycle state.
 
 ## illuminate/logging
 
-
+Create a default logger for your app, which also allows logging to Google Cloud Console.
 
 [README](lib/logging/README.md)
+
+## illuminate/network
+
+A network client which provides common configuration for interaction with API's.  
+
+[README](lib/network/README.md)
+
+## illuminate/routing
+
+Helping you parse the dynamic links your app can receive.
+
+[README](lib/routing/README.md)
+
+## illuminate/security
+
+Helping you secure the app with either pin code or biometric authentication.
+
+[README](lib/security/README.md)
+
+## illuminate/state
+
+Extending the popular state management library `Provider`.
+
+[README](lib/state/README.md)
+
+## illuminate/storage
+
+Providing a basic interaction layer for both Android and iOS secure storage implementations.
+
+[README](lib/storage/README.md)
+
+## illuminate/tracking
+
+Providing a basic interaction layer for both Android and iOS secure storage implementations.
+
+[README](lib/tracking/README.md)

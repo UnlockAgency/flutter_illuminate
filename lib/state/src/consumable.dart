@@ -44,7 +44,6 @@ class Consumable<T extends Providable> extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
-            // TODO: Default error state
             Text('Something went wrong, please try again'),
           ],
         );

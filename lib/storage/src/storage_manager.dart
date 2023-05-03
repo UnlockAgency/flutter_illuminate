@@ -17,11 +17,10 @@ class StorageManager {
         accountName: iosConfig?.accountName,
       ),
       aOptions: AndroidOptions(
-          // TODO:check why it's not working
-          // sharedPreferencesName: androidConfig?.sharedPreferencesName,
-          // encryptedSharedPreferences: androidConfig?.encryptedSharedPreferences ?? false,
-          // resetOnError: androidConfig?.resetOnError ?? false,
-          ),
+        sharedPreferencesName: null,
+        encryptedSharedPreferences: false,
+        resetOnError: androidConfig?.resetOnError ?? false,
+      ),
     );
   }
 
@@ -73,13 +72,9 @@ class StorageManager {
 }
 
 class AndroidConfig {
-  final String? sharedPreferencesName;
-  final bool encryptedSharedPreferences;
   final bool resetOnError;
 
   AndroidConfig({
-    this.sharedPreferencesName,
-    this.encryptedSharedPreferences = false,
     this.resetOnError = false,
   });
 }

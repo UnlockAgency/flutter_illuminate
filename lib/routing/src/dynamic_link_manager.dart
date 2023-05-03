@@ -3,25 +3,35 @@ import 'package:illuminate/routing/src/utils.dart';
 
 class DynamicLinkManager {
   static DynamicLinkManager? _instance;
-  static DynamicLinkManager get instance {
-    return _instance ??= DynamicLinkManager._();
+  static DynamicLinkManager? get instance {
+    return _instance;
   }
 
-  DynamicLinkManager._() {
-    _initialize();
-  }
-
-  DynamicLinkDelegate? _delegate;
-  PendingDynamicLinkData? _initialDynamicLinkData;
-
-  Future<void> _initialize() async {
-    _initialDynamicLinkData = await FirebaseDynamicLinks.instance.getInitialLink();
+  DynamicLinkManager._({PendingDynamicLinkData? initialDynamicLinkData}) {
+    _initialDynamicLinkData = initialDynamicLinkData;
 
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
       _delegate?.didReceiveDynamicLink(dynamicLinkData);
     }).onError((error) {
       logger.e(error);
     });
+  }
+
+  DynamicLinkDelegate? _delegate;
+  PendingDynamicLinkData? _initialDynamicLinkData;
+
+  static Future<DynamicLinkManager> getInstance() async {
+    if (_instance != null) {
+      return _instance!;
+    }
+
+    final initialDynamicLinkData = await FirebaseDynamicLinks.instance.getInitialLink();
+
+    _instance = DynamicLinkManager._(
+      initialDynamicLinkData: initialDynamicLinkData,
+    );
+
+    return _instance!;
   }
 
   void setDelegate(DynamicLinkDelegate delegate) {
