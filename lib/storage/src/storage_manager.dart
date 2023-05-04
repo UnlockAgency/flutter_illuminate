@@ -15,6 +15,7 @@ class StorageManager {
       iOptions: IOSOptions(
         groupId: iosConfig?.groupId,
         accountName: iosConfig?.accountName,
+        accessibility: iosConfig?.accessibility ?? KeychainAccessibility.unlocked,
       ),
       aOptions: AndroidOptions(
         sharedPreferencesName: null,

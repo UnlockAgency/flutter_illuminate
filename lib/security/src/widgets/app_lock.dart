@@ -149,7 +149,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
     }
 
     _isUnlocked = false;
-    return widget.router.pushNamed(widget.lockScreenRouteName);
+    widget.router.pushNamed(widget.lockScreenRouteName);
   }
 
   void didUnlock() {
