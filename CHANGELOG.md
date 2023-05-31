@@ -1,3 +1,9 @@
+## 1.3.3
+
+### New features
+- [Common] Added Tuple<A, B>
+- [Common] Added Coordintes class and distance calculation
+
 ## 1.3.0
 
 ### Breaking changes
