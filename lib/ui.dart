@@ -15,6 +15,7 @@ export 'ui/src/mixins/safe_area_mixin.dart' show SafeAreaMixin, ContextAwareSafe
 
 export 'ui/src/misc/carousel/carousel.dart' show Carousel;
 export 'ui/src/misc/carousel/page_indicator.dart' show PageIndicator;
+export 'ui/src/misc/fade_in_network_image.dart' show FadeInNetworkImage;
 export 'ui/src/misc/svg_asset.dart' show SvgAsset;
 export 'ui/src/misc/skeleton.dart' show Skeleton;
 export 'ui/src/misc/loading_stack.dart' show LoadingStack;

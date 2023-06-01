@@ -144,6 +144,15 @@ SvgAsset(
 );
 ```
 
+```dart
+FadeInNetworkImage(
+    url: url,
+    width: 100,
+    height: 200,
+    fit: BoxFit.cover
+)
+```
+
 ### Mixins
 
 #### Post frame
