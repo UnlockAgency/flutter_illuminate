@@ -59,6 +59,27 @@ SpacedRow(
 #### Miscellaneous
 
 ```dart
+Carousel(
+    controller: _pageController,
+    items: <Widget>[],
+    duration: const Duration(milliseconds: 350),
+    interval: const Duration(seconds: 5),
+    autoPlay: true,
+    showPageIndicator: false,
+    backgroundColor: const Color(0xFFDCDCDC),
+    indicatorAlignment: Alignment.bottomCenter,
+    indicatorColor: const Color(0x80ffffff),
+    indicatorActiveColor: Colors.white,
+);
+
+// Or use it for images specifically, which also adds a default background color
+Carousel.images(
+    controller: _carouselController,
+    urls: <String>[],
+),
+```
+
+```dart
 bool userHasPressedButton = false;
 
 // When it should be hidden, the provided width and/or height is still reserved in the widget tree

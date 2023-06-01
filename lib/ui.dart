@@ -13,6 +13,8 @@ export 'ui/src/pickers/bottom_sheet_time_picker.dart' show BottomSheetTimePicker
 export 'ui/src/mixins/post_frame_mixin.dart' show PostFrameMixin;
 export 'ui/src/mixins/safe_area_mixin.dart' show SafeAreaMixin, ContextAwareSafeAreaMixin, SafeAreaEdge;
 
+export 'ui/src/misc/carousel/carousel.dart' show Carousel;
+export 'ui/src/misc/carousel/page_indicator.dart' show PageIndicator;
 export 'ui/src/misc/svg_asset.dart' show SvgAsset;
 export 'ui/src/misc/skeleton.dart' show Skeleton;
 export 'ui/src/misc/loading_stack.dart' show LoadingStack;

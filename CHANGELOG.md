@@ -1,3 +1,8 @@
+## 1.3.4
+
+### New features
+- [UI] Added Carousel for widgets or images
+
 ## 1.3.3
 
 ### New features
