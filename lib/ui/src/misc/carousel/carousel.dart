@@ -19,12 +19,14 @@ class Carousel extends StatefulWidget {
   });
 
   factory Carousel.images({
-    required PageController controller,
     required List<String> urls,
+    PageController? controller,
+    backgroundColor = const Color(0xFFDCDCDC),
   }) {
     return Carousel(
-      controller: controller,
+      controller: controller ?? PageController(),
       showPageIndicator: true,
+      backgroundColor: backgroundColor,
       autoPlay: false,
       items: urls.map((url) {
         return Container(

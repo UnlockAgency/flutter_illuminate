@@ -37,6 +37,10 @@ extension ListExtension<E> on List<E> {
       },
     );
   }
+
+  List<T> mapList<T>(T Function(E e) toElement) {
+    return map<T>(toElement).toList();
+  }
 }
 
 extension StringExtension on String {

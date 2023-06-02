@@ -26,12 +26,12 @@ class SvgAsset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: size?.width,
-      width: size?.height,
+      height: size?.height,
+      width: size?.width,
       child: SvgPicture.asset(
         asset,
-        height: size?.width,
-        width: size?.height,
+        height: size?.height,
+        width: size?.width,
         colorFilter: colorFilter,
       ),
     );
