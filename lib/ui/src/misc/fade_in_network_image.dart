@@ -20,6 +20,9 @@ class FadeInNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeInImage.memoryNetwork(
       placeholder: kTransparentImage,
+      imageErrorBuilder: (context, error, stackTrace) {
+        return const SizedBox.shrink();
+      },
       image: url,
       width: width,
       height: height,

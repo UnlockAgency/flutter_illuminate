@@ -1,3 +1,8 @@
+## 1.3.6
+
+### Improvements
+- [UI] Added error fallback widget to FadeInNetworkImage
+
 ## 1.3.4
 
 ### New features
