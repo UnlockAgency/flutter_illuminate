@@ -1,3 +1,8 @@
+## 1.4.0
+
+### New features
+- [Routing] Added UniversalLinkManager using uni_links
+
 ## 1.3.6
 
 ### Improvements

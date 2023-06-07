@@ -40,6 +40,7 @@ class _TappableState extends State<Tappable> {
       color: Colors.transparent,
       child: InkWell(
         onTap: widget.onTap,
+        splashColor: Colors.black12,
         child: widget.child,
       ),
     );
