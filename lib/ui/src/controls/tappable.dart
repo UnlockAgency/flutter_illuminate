@@ -27,6 +27,10 @@ class _TappableState extends State<Tappable> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.onTap == null) {
+      return widget.child;
+    }
+
     if (Platform.isIOS) {
       return SimpleGestureDetector(
         onTap: widget.onTap,
