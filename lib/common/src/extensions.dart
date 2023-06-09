@@ -43,6 +43,12 @@ extension ListExtension<E> on List<E> {
   }
 }
 
+extension ListNullableExtension<E> on List<E?> {
+  List<E> compactMap() {
+    return whereType<E>().toList();
+  }
+}
+
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
