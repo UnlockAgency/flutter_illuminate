@@ -1,3 +1,11 @@
+## v1.4.1
+
+### New features
+- [UI] Added a CachedImage widget, for caching remote images
+
+### Developer related
+- [UI] Removed FadeInNetworkImage
+
 ## 1.4.0
 
 ### New features

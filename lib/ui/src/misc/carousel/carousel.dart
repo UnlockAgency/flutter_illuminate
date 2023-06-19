@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:illuminate/ui/src/misc/carousel/page_indicator.dart';
+import 'package:illuminate/ui.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({
@@ -9,7 +9,7 @@ class Carousel extends StatefulWidget {
     required this.items,
     this.duration = const Duration(milliseconds: 350),
     this.interval = const Duration(seconds: 5),
-    this.autoPlay = true,
+    this.autoPlay = false,
     this.showPageIndicator = false,
     this.backgroundColor = const Color(0xFFDCDCDC),
     this.indicatorAlignment,
@@ -21,21 +21,34 @@ class Carousel extends StatefulWidget {
   factory Carousel.images({
     required List<String> urls,
     PageController? controller,
-    backgroundColor = const Color(0xFFDCDCDC),
+    Duration duration = const Duration(milliseconds: 350),
+    Duration interval = const Duration(seconds: 5),
+    bool autoPlay = false,
+    bool showPageIndicator = false,
+    Color backgroundColor = const Color(0xFFDCDCDC),
+    Alignment? indicatorAlignment,
+    Color indicatorColor = const Color(0x80ffffff),
+    Color indicatorActiveColor = Colors.white,
   }) {
     return Carousel(
       controller: controller ?? PageController(),
-      showPageIndicator: true,
+      showPageIndicator: showPageIndicator,
+      duration: duration,
+      interval: interval,
       backgroundColor: backgroundColor,
-      autoPlay: false,
+      indicatorActiveColor: indicatorActiveColor,
+      indicatorAlignment: indicatorAlignment,
+      indicatorColor: indicatorColor,
+      autoPlay: autoPlay,
       items: urls.map((url) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                url,
+        return CachedImage(
+          url: url,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
               ),
-              fit: BoxFit.cover,
             ),
           ),
         );
@@ -72,9 +85,7 @@ class _CarouselState extends State<Carousel> {
     _currentPage = widget.controller.initialPage;
 
     if (widget.autoPlay) {
-      _timer = Timer.periodic(widget.interval, (timer) {
-        handleCarousel();
-      });
+      _resetTimer();
     }
   }
 
@@ -83,6 +94,13 @@ class _CarouselState extends State<Carousel> {
     _timer?.cancel();
 
     super.dispose();
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(widget.interval, (timer) {
+      _animateToNextSlide();
+    });
   }
 
   @override
@@ -99,9 +117,14 @@ class _CarouselState extends State<Carousel> {
             itemBuilder: (context, index) {
               return widget.items[index];
             },
-            onPageChanged: (value) => setState(() {
-              _currentPage = value;
-            }),
+            onPageChanged: (value) {
+              // Also reset the timer, because the user did a manual swipe
+              _resetTimer();
+
+              setState(() {
+                _currentPage = value;
+              });
+            },
           ),
         ),
         if (widget.showPageIndicator)
@@ -118,7 +141,7 @@ class _CarouselState extends State<Carousel> {
     );
   }
 
-  void handleCarousel() {
+  void _animateToNextSlide() {
     if (_currentPage < widget.items.length - 1) {
       _currentPage++;
     } else {
