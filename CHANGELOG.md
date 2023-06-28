@@ -1,3 +1,8 @@
+## v1.4.2
+
+### Bugfix
+- [UI] Don't reset the timer for the carousel when autoplay isn't enabled
+
 ## v1.4.1
 
 ### New features

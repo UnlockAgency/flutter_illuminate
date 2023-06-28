@@ -84,9 +84,7 @@ class _CarouselState extends State<Carousel> {
 
     _currentPage = widget.controller.initialPage;
 
-    if (widget.autoPlay) {
-      _resetTimer();
-    }
+    _resetTimer();
   }
 
   @override
@@ -97,6 +95,10 @@ class _CarouselState extends State<Carousel> {
   }
 
   void _resetTimer() {
+    if (!widget.autoPlay) {
+      return;
+    }
+
     _timer?.cancel();
     _timer = Timer.periodic(widget.interval, (timer) {
       _animateToNextSlide();
