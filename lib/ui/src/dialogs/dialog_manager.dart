@@ -27,10 +27,12 @@ class DialogManager extends DialogService {
     BuildContext context, {
     required String title,
     required String message,
+    bool barrierDismissible = true,
     List<DialogAction> actions = const [],
   }) {
     return showDialog(
       context: context,
+      barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         if (Platform.isAndroid) {
           return _android(
@@ -121,6 +123,7 @@ abstract class DialogService {
     BuildContext context, {
     required String title,
     required String message,
+    bool barrierDismissible = true,
     List<DialogAction> actions = const [],
   });
 }
