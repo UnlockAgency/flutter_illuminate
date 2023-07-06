@@ -80,6 +80,18 @@ Carousel.images(
 ```
 
 ```dart
+MarkdownText(
+    style: Theme.of(context).textTheme.bodyMedium,
+    onTapLink: (String? link) { 
+        // Do something
+    },
+    scrollController: ScrollController(),
+    selectable: false,
+    container: MarkdownContainer.listView,
+);
+```
+
+```dart
 bool userHasPressedButton = false;
 
 // When it should be hidden, the provided width and/or height is still reserved in the widget tree
