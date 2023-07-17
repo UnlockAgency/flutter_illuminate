@@ -34,31 +34,42 @@ class DialogManager extends DialogService {
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
-        if (Platform.isAndroid) {
-          return _android(
-            context,
-            title: title,
-            message: message,
-            actions: actions,
-          );
-        }
+        return WillPopScope(
+          onWillPop: () async => barrierDismissible,
+          child: Builder(builder: (context) {
+            if (Platform.isAndroid) {
+              return _AlertDialog(
+                title: title,
+                message: message,
+                actions: actions,
+              );
+            }
 
-        return _ios(
-          context,
-          title: title,
-          message: message,
-          actions: actions,
+            return _CupertinoAlertDialog(
+              title: title,
+              message: message,
+              actions: actions,
+            );
+          }),
         );
       },
     );
   }
+}
 
-  Widget _android(
-    BuildContext context, {
-    required String title,
-    required String message,
-    List<DialogAction> actions = const [],
-  }) {
+class _AlertDialog extends StatelessWidget {
+  const _AlertDialog({
+    required this.title,
+    required this.message,
+    this.actions = const [],
+  });
+
+  final String title;
+  final String message;
+  final List<DialogAction> actions;
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
       content: Text(message),
@@ -88,13 +99,21 @@ class DialogManager extends DialogService {
       }).toList(),
     );
   }
+}
 
-  Widget _ios(
-    BuildContext context, {
-    required String title,
-    required String message,
-    List<DialogAction> actions = const [],
-  }) {
+class _CupertinoAlertDialog extends StatelessWidget {
+  const _CupertinoAlertDialog({
+    required this.title,
+    required this.message,
+    this.actions = const [],
+  });
+
+  final String title;
+  final String message;
+  final List<DialogAction> actions;
+
+  @override
+  Widget build(BuildContext context) {
     return CupertinoAlertDialog(
       title: Text(title),
       content: Text(message),

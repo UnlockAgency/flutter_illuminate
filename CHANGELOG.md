@@ -1,3 +1,13 @@
+## v1.5.1
+
+### Bugfix
+- [UI] Disabling back button functionality when barrierDismissable is false for dialogs
+
+## v1.5.0
+
+### New features
+- [UI] Added MarkdownText widget
+
 ## v1.4.2
 
 ### Bugfix

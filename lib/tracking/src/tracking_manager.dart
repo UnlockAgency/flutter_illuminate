@@ -33,6 +33,8 @@ class TrackingManager implements TrackingService {
       return;
     }
 
+    logger.d('[Tracking] <UserProperty>: ${property.name}, parameters: $value');
+
     await FirebaseAnalytics.instance.setUserProperty(name: property.name, value: value);
   }
 
