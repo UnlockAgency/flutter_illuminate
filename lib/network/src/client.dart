@@ -15,6 +15,8 @@ class Client {
   late Dio _dioClient;
 
   OAuthAuthenticator? _oAuthAuthenticator;
+  AuthenticationDelegate? _authenticationDelegate;
+  OAuthAuthenticationDelegate? _oAuthAuthenticationDelegate;
 
   Client(this.config, {this.exceptionHandler}) {
     _dioClient = Dio(
@@ -37,7 +39,8 @@ class Client {
       AuthenticationInterceptor(
         config: config,
         authenticator: _oAuthAuthenticator,
-        onAuthenticationFailure: onAuthenticationFailure,
+        onAuthenticationFailure: _onAuthenticationFailure,
+        onTokenRefreshFailure: _onTokenRefreshFailure,
       ),
     );
   }
@@ -112,8 +115,14 @@ class Client {
     return await _oAuthAuthenticator!.refreshToken();
   }
 
-  Future<void> onAuthenticationFailure() async {
-    //
+  setAuthenticationDelegate(AuthenticationDelegate delegate) => _authenticationDelegate = delegate;
+  Future<void> _onAuthenticationFailure() async {
+    await _authenticationDelegate?.onAuthenticationFailure();
+  }
+
+  setOAuthAuthenticationDelegate(OAuthAuthenticationDelegate delegate) => _oAuthAuthenticationDelegate = delegate;
+  Future<void> _onTokenRefreshFailure() async {
+    await _oAuthAuthenticationDelegate?.onTokenRefreshFailure();
   }
 
   Future<void> clear() async {
@@ -129,4 +138,12 @@ class Client {
       Iterable.generate(4, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
     );
   }
+}
+
+abstract class AuthenticationDelegate {
+  Future<void> onAuthenticationFailure();
+}
+
+abstract class OAuthAuthenticationDelegate {
+  Future<void> onTokenRefreshFailure();
 }

@@ -49,6 +49,10 @@ class Logging {
       await cloudLogger.initialize(serviceAccount);
 
       Logger.addLogListener((event) {
+        if (event.message is! String) {
+          return;
+        }
+
         cloudLogger.logEvent(event.message, labels: metadata);
       });
     }

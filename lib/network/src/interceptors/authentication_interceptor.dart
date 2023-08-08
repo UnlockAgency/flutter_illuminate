@@ -9,11 +9,13 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
   final OAuthAuthenticator? authenticator;
   final Future<void> Function()? onAuthenticationFailure;
+  final Future<void> Function()? onTokenRefreshFailure;
 
   AuthenticationInterceptor({
     required ApiConfig config,
     this.authenticator,
     this.onAuthenticationFailure,
+    this.onTokenRefreshFailure,
   }) {
     _dioClient = Dio(
       BaseOptions(
@@ -72,7 +74,9 @@ class AuthenticationInterceptor extends QueuedInterceptor {
     }
 
     // Try to refresh the token
-    _refreshToken(requestOptions: response.requestOptions, requestId: requestId).then((response) {
+    _refreshToken(requestOptions: response.requestOptions, requestId: requestId).then((token) {
+      return _retryRequest(response.requestOptions, token);
+    }).then((response) {
       LoggerInterceptor.responseLog(response);
 
       handler.next(response);
@@ -105,7 +109,9 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       return;
     }
 
-    _refreshToken(requestOptions: err.requestOptions, requestId: requestId).then((response) {
+    _refreshToken(requestOptions: err.requestOptions, requestId: requestId).then((token) {
+      return _retryRequest(err.requestOptions, token);
+    }).then((response) {
       LoggerInterceptor.responseLog(response);
 
       handler.resolve(response);
@@ -115,7 +121,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
     });
   }
 
-  Future<Response<dynamic>> _refreshToken({required RequestOptions requestOptions, String? requestId}) {
+  Future<String> _refreshToken({required RequestOptions requestOptions, String? requestId}) {
     if (authenticator == null) {
       return Future.error(OAuthConfigurationException(message: 'OAuth not configured'));
     }
@@ -123,7 +129,10 @@ class AuthenticationInterceptor extends QueuedInterceptor {
     return authenticator!.refreshToken().then((token) {
       logger.i('RESPONSE[$requestId] => Received new access token');
 
-      return _retryRequest(requestOptions, token);
+      return Future.value(token);
+    }).catchError((error) {
+      onTokenRefreshFailure?.call();
+      throw error;
     });
   }
 

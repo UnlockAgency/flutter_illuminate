@@ -1,3 +1,14 @@
+# Changelog
+
+## v1.5.2
+
+### Improvements
+- [Network] Adding an onTokenRefreshFailure listener
+- [Network] Migrated onAuthenticationFailure to a delegate
+
+### Bugfix
+- [Logging] Check if a message is of String type before sending to Google Cloud Logging
+
 ## v1.5.1
 
 ### Bugfix
