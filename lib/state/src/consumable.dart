@@ -41,9 +41,9 @@ class Consumable<T extends Providable> extends StatelessWidget {
           return StateManager.instance.errorWidget!;
         }
 
-        return Column(
+        return const Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: const [
+          children: [
             Text('Something went wrong, please try again'),
           ],
         );

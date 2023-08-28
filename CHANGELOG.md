@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.6.0
+
+### Improvements
+- Removed duplicate `logger` instances and start using the general one
+- Replaced `DioError` with `DioException`
+
+### Developer related
+- Require `flutter: ^3.17`
+- Require `dart: ^3.0.0`
+- Upgrade `dio: ^5.0.0`
+- Upgrade `illuminate: ^2.0.0`
+
+### Breaking changes
+- GoRouter migration from [6.0 to 7.0](https://docs.google.com/document/d/10Xbpifbs4E-zh6YE5akIO8raJq_m3FIXs6nUGdOspOg/edit)
+- GoRouter migration from [8.0 to 9.0](https://docs.google.com/document/d/16plvWc9ablQsUs7w6bWDpTZ7PwMP4YUhV-qMQ3iljE0/edit)
+
 ## v1.5.2
 
 ### Improvements

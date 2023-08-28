@@ -24,7 +24,7 @@ class LoggerInterceptor extends QueuedInterceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     errorLog(err.requestOptions);
     handler.next(err);
   }

@@ -1,5 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:illuminate/routing/src/utils.dart';
+import 'package:illuminate/utils.dart';
 
 class DynamicLinkManager {
   static DynamicLinkManager? _instance;

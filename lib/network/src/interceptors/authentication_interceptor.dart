@@ -40,7 +40,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       logger.i('REQUEST[$requestId] => Authorization: Bearer $token');
       handler.next(options);
     }).catchError((error) {
-      logger.e('Unable to read access token', error);
+      logger.e('Unable to read access token', error: error);
       handler.next(options);
     });
   }
@@ -81,7 +81,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
       handler.next(response);
     }).catchError((error) {
-      logger.e('ERROR[$requestId] => Error getting refresh token from storage', error);
+      logger.e('ERROR[$requestId] => Error getting refresh token from storage', error: error);
 
       // Resolve the original response
       handler.next(response);
@@ -89,7 +89,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     String? requestId = err.requestOptions.extra['id'];
     String? authentication = err.requestOptions.extra['authentication'];
 
@@ -116,7 +116,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
 
       handler.resolve(response);
     }).catchError((error) {
-      logger.e('ERROR[$requestId] => Error getting refresh token from storage', error);
+      logger.e('ERROR[$requestId] => Error getting refresh token from storage', error: error);
       handler.next(err);
     });
   }

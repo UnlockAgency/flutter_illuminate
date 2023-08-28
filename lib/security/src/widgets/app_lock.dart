@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:illuminate/utils.dart';
 
 class AppLock extends StatefulWidget {
   final Widget child;
@@ -24,10 +25,11 @@ class AppLock extends StatefulWidget {
     this.backgroundLockLatency = const Duration(seconds: 5),
   }) : super(key: key);
 
+  // ignore: library_private_types_in_public_api
   static _AppLockState? of(BuildContext context) => context.findAncestorStateOfType<_AppLockState>();
 
   @override
-  _AppLockState createState() => _AppLockState();
+  State<AppLock> createState() => _AppLockState();
 }
 
 class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
@@ -61,13 +63,13 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       return;
     }
 
-    print("[Lifecycle] $state");
+    logger.i("[Lifecycle] $state");
 
     if (state == AppLifecycleState.paused) {
-      print("[AppLock] going to lock app after ${widget.backgroundLockLatency.inSeconds} seconds");
+      logger.i("[AppLock] going to lock app after ${widget.backgroundLockLatency.inSeconds} seconds");
 
       _backgroundLockLatencyTimer = Timer(widget.backgroundLockLatency, () {
-        print("[AppLock] _isUnlocked = false");
+        logger.i("[AppLock] _isUnlocked = false");
         _isUnlocked = false;
       });
     }
@@ -98,10 +100,10 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   Future<void> _triggerLockscreen() async {
     _backgroundLockLatencyTimer?.cancel();
 
-    print("[AppLock] _isUnlocked: $_isUnlocked");
+    logger.i("[AppLock] _isUnlocked: $_isUnlocked");
 
     bool shouldTriggerLockScreen = await widget.shouldTriggerLockScreen();
-    print("[AppLock] Should trigger lockScreen: $shouldTriggerLockScreen");
+    logger.i("[AppLock] Should trigger lockScreen: $shouldTriggerLockScreen");
 
     // Check if we need to show a lockscreen (for instance, when the user hasn't configured a code yet)
     if (shouldTriggerLockScreen == false) {
@@ -157,7 +159,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       return;
     }
 
-    print("[AppLock] _isUnlocked = true");
+    logger.i("[AppLock] _isUnlocked = true");
     _isUnlocked = true;
     widget.router.pop();
   }

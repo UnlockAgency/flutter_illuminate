@@ -88,8 +88,6 @@ class _SimpleGestureDetectorState extends State<SimpleGestureDetector> {
       );
     }
 
-    print('_heldDown: $_heldDown');
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
       decoration: BoxDecoration(

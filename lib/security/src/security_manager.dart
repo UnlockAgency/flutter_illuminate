@@ -2,6 +2,7 @@ library security;
 
 import 'package:illuminate/security/src/types/security_type.dart';
 import 'package:illuminate/security/src/types/storage_key.dart';
+import 'package:illuminate/utils.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:illuminate/security/src/utils.dart';
 

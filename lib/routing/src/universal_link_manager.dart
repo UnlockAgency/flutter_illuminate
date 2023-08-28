@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:illuminate/routing/src/utils.dart';
+import 'package:illuminate/utils.dart';
 import 'package:uni_links/uni_links.dart';
 
 class UniversalLinkManager {
@@ -18,7 +18,7 @@ class UniversalLinkManager {
 
       _delegate?.didReceiveUniversalLink(uri);
     }).onError((error, stacktrace) {
-      logger.e('$_tag Error retrieving initial universal link', error, stacktrace);
+      logger.e('$_tag Error retrieving initial universal link', error: error, stackTrace: stacktrace);
     });
   }
 

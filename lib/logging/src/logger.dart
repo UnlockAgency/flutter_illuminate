@@ -18,7 +18,7 @@ class Logging {
 
   static Future<Logger> createInstance({
     required String userIdentifier,
-    Level level = Level.verbose,
+    Level level = Level.trace,
     String? serviceAccount,
     Map<String, String>? metadata,
   }) async {
@@ -26,6 +26,7 @@ class Logging {
       return _logger!;
     }
 
+    // ignore: avoid_print
     print('Setting up logger..');
 
     _logger = Logger(

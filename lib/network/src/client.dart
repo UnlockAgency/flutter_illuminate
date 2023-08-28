@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:illuminate/network/src/exceptions/exceptions.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
@@ -8,6 +9,15 @@ import 'package:illuminate/network/src/oauth_authenticator.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
 import 'package:illuminate/utils.dart';
+
+/// Must be top-level function
+Map<String, dynamic> _parseAndDecode(String response) {
+  return jsonDecode(response) as Map<String, dynamic>;
+}
+
+Future<Map<String, dynamic>> _parseJson(String text) {
+  return compute(_parseAndDecode, text);
+}
 
 class Client {
   final ApiConfig config;
@@ -26,7 +36,7 @@ class Client {
         // This prevents exceptions without response body when the status code isn't 2XX
         validateStatus: (_) => true,
       ),
-    );
+    )..transformer = BackgroundTransformer();
 
     _dioClient.interceptors.add(LoggerInterceptor());
 
@@ -45,11 +55,11 @@ class Client {
     );
   }
 
-  Future<Response> request(Request request) async {
+  Future<Response<Map<String, dynamic>>> request(Request request) async {
     try {
       String requestId = _requestId();
 
-      Response response = await _dioClient.request(
+      Response<Map<String, dynamic>> response = await _dioClient.request<Map<String, dynamic>>(
         request.path,
         data: request.body,
         queryParameters: request.query,
@@ -70,18 +80,9 @@ class Client {
         throw ResponseException(statusCode: statusCode, data: response.data);
       }
 
-      try {
-        // Sometimes, we're still getting a parsed response from DIO.
-        // For instance, when we're refreshing a token in the interceptor.
-        // So, to be sure, check before decoding JSON if i's value is in fact a string.
-        response.data = response.data is String ? jsonDecode(response.data) : response.data;
-      } on FormatException catch (_) {
-        logger.w('[REQ] Response couldn\'t be decoded to json, using plain text as fallback');
-      }
-
       return response;
     } on ResponseException catch (exception, stacktrace) {
-      logger.e('Response error', exception, stacktrace);
+      logger.e('Response error', error: exception, stackTrace: stacktrace);
 
       if (exceptionHandler != null) {
         await exceptionHandler!(exception, stacktrace);
@@ -89,7 +90,7 @@ class Client {
 
       rethrow;
     } catch (exception, stacktrace) {
-      logger.e('Cought request error', exception, stacktrace);
+      logger.e('Cought request error', error: exception, stackTrace: stacktrace);
 
       if (exceptionHandler != null) {
         await exceptionHandler!(exception, stacktrace);
