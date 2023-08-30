@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:illuminate/network.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
+import 'package:illuminate/network/src/transformer/json_transformer.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/utils.dart';
 
@@ -20,9 +21,9 @@ class AuthenticationInterceptor extends QueuedInterceptor {
     _dioClient = Dio(
       BaseOptions(
         baseUrl: config.host,
-        responseType: ResponseType.plain,
+        responseType: ResponseType.json,
       ),
-    );
+    )..transformer = JSONTransformer();
   }
 
   @override
@@ -149,7 +150,7 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       options: Options(
         method: requestOptions.method,
         headers: headers,
-        responseType: ResponseType.plain,
+        responseType: ResponseType.json,
       ),
     );
   }

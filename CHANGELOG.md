@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.1
+
+### Developer related
+- Upgrade `flutter_secure_storage: ^9.0.0`
+- Use a custom JSONTransformer for HTTP responses
+- Implement the new status change listeners for lifecycle events
+
+
 ## v1.6.0
 
 ### Improvements
@@ -15,6 +23,7 @@
 ### Breaking changes
 - GoRouter migration from [6.0 to 7.0](https://docs.google.com/document/d/10Xbpifbs4E-zh6YE5akIO8raJq_m3FIXs6nUGdOspOg/edit)
 - GoRouter migration from [8.0 to 9.0](https://docs.google.com/document/d/16plvWc9ablQsUs7w6bWDpTZ7PwMP4YUhV-qMQ3iljE0/edit)
+- GoRouter migration from [9.0 to 10.0](https://docs.google.com/document/d/1vjupshmFJtfGSOppZxp7Tzkq7dotcLxCcpdluuNYe1o/edit)
 
 ## v1.5.2
 

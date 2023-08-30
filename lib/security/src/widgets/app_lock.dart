@@ -32,64 +32,104 @@ class AppLock extends StatefulWidget {
   State<AppLock> createState() => _AppLockState();
 }
 
-class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
+class _AppLockState extends State<AppLock> {
   late bool _isUnlocked;
   late bool _enabled;
   AppLifecycleState? _previousState;
 
   Timer? _backgroundLockLatencyTimer;
 
+  late final AppLifecycleListener _listener;
+
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+    super.initState();
 
     _isUnlocked = false;
     _enabled = widget.enabled;
 
-    super.initState();
-
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _triggerLockscreen();
     });
+
+    // Initialize the AppLifecycleListener class and pass callbacks
+    _listener = AppLifecycleListener(
+      onDetach: _onDetach,
+      onHide: _onHide,
+      onInactive: _onInactive,
+      onPause: _onPause,
+      onRestart: _onRestart,
+      onResume: _onResume,
+      onShow: _onShow,
+      onStateChange: _onStateChanged,
+    );
+
+    super.initState();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+  void dispose() {
+    _listener.dispose();
+
+    _backgroundLockLatencyTimer?.cancel();
+
+    super.dispose();
+  }
+
+  /// A callback that is called when an application has exited, and detached all host views from the engine.
+  void _onDetach() {
+    //
+  }
+
+  /// A callback that is called when the application is hidden.
+  void _onHide() {
+    //
+  }
+
+  /// A callback that is called when the application loses input focus.
+  void _onInactive() {
+    //
+  }
+
+  /// A callback that is called when the application is paused.
+  void _onPause() {
     if (!_enabled) {
       return;
     }
 
+    logger.i("[AppLock] going to lock app after ${widget.backgroundLockLatency.inSeconds} seconds");
+
+    _backgroundLockLatencyTimer = Timer(widget.backgroundLockLatency, () {
+      logger.i("[AppLock] _isUnlocked = false");
+      _isUnlocked = false;
+    });
+  }
+
+  /// A callback that is called when the application is resumed after being paused.
+  void _onRestart() {
+    //
+  }
+
+  /// A callback that is called when a view in the application gains input focus.
+  void _onResume() async {
+    if (!_enabled) {
+      return;
+    }
+
+    await _triggerLockscreen();
+  }
+
+  /// A callback that is called when the application is shown.
+  void _onShow() {
+    //
+  }
+
+  void _onStateChanged(AppLifecycleState state) async {
     if (_previousState == state) {
       return;
     }
 
     logger.i("[Lifecycle] $state");
-
-    if (state == AppLifecycleState.paused) {
-      logger.i("[AppLock] going to lock app after ${widget.backgroundLockLatency.inSeconds} seconds");
-
-      _backgroundLockLatencyTimer = Timer(widget.backgroundLockLatency, () {
-        logger.i("[AppLock] _isUnlocked = false");
-        _isUnlocked = false;
-      });
-    }
-
-    if (state == AppLifecycleState.resumed) {
-      await _triggerLockscreen();
-    }
-
-    _previousState = state;
-
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-
-    _backgroundLockLatencyTimer?.cancel();
-
-    super.dispose();
   }
 
   @override
@@ -146,7 +186,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   /// Manually show the [lockScreen].
   void showLockScreen() {
     // Check if we're already showing the lockscreen
-    if (widget.router.location == widget.lockScreenRoute) {
+    if (_routerLocation() == widget.lockScreenRoute) {
       return;
     }
 
@@ -155,12 +195,19 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   }
 
   void didUnlock() {
-    if (widget.router.location != widget.lockScreenRoute) {
+    if (_routerLocation() != widget.lockScreenRoute) {
       return;
     }
 
     logger.i("[AppLock] _isUnlocked = true");
     _isUnlocked = true;
     widget.router.pop();
+  }
+
+  String _routerLocation() {
+    final RouteMatch lastMatch = widget.router.routerDelegate.currentConfiguration.last;
+    final RouteMatchList matchList =
+        lastMatch is ImperativeRouteMatch ? lastMatch.matches : widget.router.routerDelegate.currentConfiguration;
+    return matchList.uri.toString();
   }
 }

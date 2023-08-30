@@ -6,6 +6,7 @@ import 'package:illuminate/network/src/exceptions/exceptions.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
 import 'package:illuminate/network/src/oauth_authenticator.dart';
+import 'package:illuminate/network/src/transformer/json_transformer.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
 import 'package:illuminate/utils.dart';
@@ -32,11 +33,11 @@ class Client {
     _dioClient = Dio(
       BaseOptions(
         baseUrl: config.host,
-        responseType: ResponseType.plain,
+        responseType: ResponseType.json,
         // This prevents exceptions without response body when the status code isn't 2XX
         validateStatus: (_) => true,
       ),
-    )..transformer = BackgroundTransformer();
+    )..transformer = JSONTransformer();
 
     _dioClient.interceptors.add(LoggerInterceptor());
 
@@ -55,18 +56,18 @@ class Client {
     );
   }
 
-  Future<Response<Map<String, dynamic>>> request(Request request) async {
+  Future<Response<dynamic>> request(Request request) async {
     try {
       String requestId = _requestId();
 
-      Response<Map<String, dynamic>> response = await _dioClient.request<Map<String, dynamic>>(
+      Response<dynamic> response = await _dioClient.request<dynamic>(
         request.path,
         data: request.body,
         queryParameters: request.query,
         options: Options(
           method: request.httpMethod.name,
           headers: request.headers,
-          responseType: ResponseType.plain,
+          responseType: ResponseType.json,
           extra: (request.extra ?? {})
             ..addAll({
               'id': requestId,
@@ -74,6 +75,15 @@ class Client {
             }),
         ),
       );
+
+      try {
+        // Sometimes, we're still getting a parsed response from DIO.
+        // For instance, when we're refreshing a token in the interceptor.
+        // So, to be sure, check before decoding JSON if i's value is in fact a string.
+        response.data = response.data is String ? jsonDecode(response.data) : response.data;
+      } on FormatException catch (_) {
+        logger.w('[REQ] Response couldn\'t be decoded to json, using plain text as fallback');
+      }
 
       int statusCode = response.statusCode ?? 0;
       if (statusCode < 200 || statusCode >= 300) {
