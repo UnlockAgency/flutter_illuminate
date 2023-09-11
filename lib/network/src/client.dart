@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:illuminate/network/src/exceptions/exceptions.dart';
 import 'package:illuminate/network/src/interceptors/authentication_interceptor.dart';
 import 'package:illuminate/network/src/interceptors/logger_interceptor.dart';
@@ -10,15 +9,6 @@ import 'package:illuminate/network/src/transformer/json_transformer.dart';
 import 'package:illuminate/network/src/utils.dart';
 import 'package:illuminate/network/src/types.dart';
 import 'package:illuminate/utils.dart';
-
-/// Must be top-level function
-Map<String, dynamic> _parseAndDecode(String response) {
-  return jsonDecode(response) as Map<String, dynamic>;
-}
-
-Future<Map<String, dynamic>> _parseJson(String text) {
-  return compute(_parseAndDecode, text);
-}
 
 class Client {
   final ApiConfig config;

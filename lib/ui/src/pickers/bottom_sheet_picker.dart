@@ -56,7 +56,9 @@ class BottomSheetPicker extends StatelessWidget with SafeAreaMixin {
                       strings.cancelButtonTitle,
                       cancellation: true,
                       onPressed: () {
-                        onCancel!();
+                        Navigator.of(context).pop();
+
+                        onCancel?.call();
                       },
                     )
                   : Container(),

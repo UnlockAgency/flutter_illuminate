@@ -42,6 +42,9 @@ class _BottomSheetDatePickerState extends State<BottomSheetDatePicker> with Safe
   @override
   Widget build(BuildContext context) {
     return BottomSheetPicker(
+      strings: widget.strings,
+      onCancel: widget.onCancel,
+      padding: widget.padding,
       onConfirm: () {
         widget.onConfirm(_date);
         Navigator.of(context).pop();

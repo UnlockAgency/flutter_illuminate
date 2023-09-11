@@ -46,6 +46,9 @@ class _BottomSheetTimePickerState extends State<BottomSheetTimePicker> with Safe
   @override
   Widget build(BuildContext context) {
     return BottomSheetPicker(
+      onCancel: widget.onCancel,
+      strings: widget.strings,
+      padding: widget.padding,
       onConfirm: () {
         widget.onConfirm(_date);
         Navigator.of(context).pop();

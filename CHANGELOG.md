@@ -1,12 +1,16 @@
 # Changelog
 
+## v1.6.2
+
+### Bugfix
+- [UI] Pass along `strings`, `onCancel` and `padding` parameters to date- and timepicker
+
 ## v1.6.1
 
 ### Developer related
 - Upgrade `flutter_secure_storage: ^9.0.0`
 - Use a custom JSONTransformer for HTTP responses
 - Implement the new status change listeners for lifecycle events
-
 
 ## v1.6.0
 
