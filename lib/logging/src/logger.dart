@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:googleapis/logging/v2.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:illuminate/common/src/helpers.dart';
+import 'package:illuminate/foundation.dart';
 import 'package:illuminate/logging.dart';
 import 'package:logger/logger.dart';
 
@@ -33,7 +33,7 @@ class Logging {
       filter: LoggingFilter(logLevel: level),
       printer: PrettyPrinter(
         // Disable colors for iOS (rendering doesn't work properly) and also for release builds
-        colors: kDebugMode && Platform.isAndroid,
+        colors: kDebugMode && Foundation.platform.isAndroid,
         noBoxingByDefault: true,
         methodCount: 0,
         printTime: true,

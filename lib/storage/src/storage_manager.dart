@@ -10,6 +10,7 @@ class StorageManager {
     required this.prefix,
     AndroidConfig? androidConfig,
     IOSConfig? iosConfig,
+    WebConfig? webConfig,
   }) {
     _storage = FlutterSecureStorage(
       iOptions: IOSOptions(
@@ -22,6 +23,12 @@ class StorageManager {
         encryptedSharedPreferences: false,
         resetOnError: androidConfig?.resetOnError ?? false,
       ),
+      webOptions: webConfig != null
+          ? WebOptions(
+              dbName: webConfig.dbName,
+              publicKey: webConfig.publicKey,
+            )
+          : WebOptions.defaultOptions,
     );
   }
 
@@ -73,23 +80,33 @@ class StorageManager {
 }
 
 class AndroidConfig {
-  final bool resetOnError;
-
   AndroidConfig({
     this.resetOnError = false,
   });
+
+  final bool resetOnError;
 }
 
 class IOSConfig {
-  final String? groupId;
-  final String? accountName;
-  final KeychainAccessibility accessibility;
-  final bool synchronizable;
-
   IOSConfig({
     this.groupId,
     this.accountName = AppleOptions.defaultAccountName,
     this.accessibility = KeychainAccessibility.unlocked,
     this.synchronizable = false,
   });
+
+  final String? groupId;
+  final String? accountName;
+  final KeychainAccessibility accessibility;
+  final bool synchronizable;
+}
+
+class WebConfig {
+  const WebConfig({
+    required this.dbName,
+    required this.publicKey,
+  });
+
+  final String dbName;
+  final String publicKey;
 }

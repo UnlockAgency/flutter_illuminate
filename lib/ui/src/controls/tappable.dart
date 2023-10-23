@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:illuminate/foundation.dart';
 import 'package:illuminate/ui/src/controls/simple_gesture_detector.dart';
 
 class Tappable extends StatefulWidget {
@@ -31,22 +31,22 @@ class _TappableState extends State<Tappable> {
       return widget.child;
     }
 
-    if (Platform.isIOS) {
-      return SimpleGestureDetector(
-        onTap: widget.onTap,
-        enabled: _enabled,
-        config: widget.gestureDetectorConfig ?? const GestureDetectorConfig(),
-        child: widget.child,
+    if (Foundation.platform.isAndroid) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap,
+          splashColor: Colors.black12,
+          child: widget.child,
+        ),
       );
     }
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.onTap,
-        splashColor: Colors.black12,
-        child: widget.child,
-      ),
+    return SimpleGestureDetector(
+      onTap: widget.onTap,
+      enabled: _enabled,
+      config: widget.gestureDetectorConfig ?? const GestureDetectorConfig(),
+      child: widget.child,
     );
   }
 }

@@ -76,6 +76,12 @@ Access core functionality of the app, for instance the current lifecycle state.
 
 [README](lib/core/README.md)
 
+## illuminate/foundation
+
+Foundational elements to (the principles) of your app.
+
+[README](lib/foundation/README.md)
+
 ## illuminate/logging
 
 Create a default logger for your app, which also allows logging to Google Cloud Console.

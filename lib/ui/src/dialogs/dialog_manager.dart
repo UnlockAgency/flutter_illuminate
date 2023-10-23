@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:illuminate/foundation.dart';
 
 class DialogAction {
   final DialogActionType type;
@@ -37,15 +36,15 @@ class DialogManager extends DialogService {
         return WillPopScope(
           onWillPop: () async => barrierDismissible,
           child: Builder(builder: (context) {
-            if (Platform.isAndroid) {
-              return _AlertDialog(
+            if (Foundation.platform.isIOS) {
+              return _CupertinoAlertDialog(
                 title: title,
                 message: message,
                 actions: actions,
               );
             }
 
-            return _CupertinoAlertDialog(
+            return _AlertDialog(
               title: title,
               message: message,
               actions: actions,

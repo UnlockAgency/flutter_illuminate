@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.0
+
+### New features
+- Upgrades for web development
+
 ## v1.6.2
 
 ### Bugfix
