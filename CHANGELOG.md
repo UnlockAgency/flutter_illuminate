@@ -4,6 +4,7 @@
 
 ### New features
 - Upgrades for web development
+- Add possibility to disable triggering the lockscreen on launch
 
 ## v1.6.2
 

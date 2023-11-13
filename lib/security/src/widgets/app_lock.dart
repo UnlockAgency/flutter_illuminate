@@ -11,6 +11,7 @@ class AppLock extends StatefulWidget {
   final String lockScreenRouteName;
   final Future<bool> Function() shouldTriggerLockScreen;
 
+  final bool triggerOnLaunch;
   final bool enabled;
   final Duration backgroundLockLatency;
 
@@ -21,6 +22,7 @@ class AppLock extends StatefulWidget {
     required this.lockScreenRoute,
     required this.lockScreenRouteName,
     required this.shouldTriggerLockScreen,
+    this.triggerOnLaunch = true,
     this.enabled = true,
     this.backgroundLockLatency = const Duration(seconds: 5),
   }) : super(key: key);
@@ -48,9 +50,11 @@ class _AppLockState extends State<AppLock> {
     _isUnlocked = false;
     _enabled = widget.enabled;
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _triggerLockscreen();
-    });
+    if (widget.triggerOnLaunch) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _triggerLockscreen();
+      });
+    }
 
     // Initialize the AppLifecycleListener class and pass callbacks
     _listener = AppLifecycleListener(
