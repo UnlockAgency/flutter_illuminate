@@ -11,6 +11,7 @@ enum Platform {
 
 abstract class PlatformIdentifiable {
   Platform get current;
+  String? get localeName;
 
   bool get isAndroid => false;
   bool get isIOS => false;

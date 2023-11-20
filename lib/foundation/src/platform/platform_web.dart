@@ -7,5 +7,10 @@ class PlatformIdentifier extends PlatformIdentifiable {
   }
 
   @override
+  String? get localeName {
+    return null;
+  }
+
+  @override
   bool get isWeb => true;
 }

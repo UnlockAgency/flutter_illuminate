@@ -46,7 +46,7 @@ logger.i('''
 ---------------------------------------------
 Launching $appName
     - Operating system: ${Platform.operatingSystem}
-    - Locale: ${Platform.localeName}
+    - Locale: ${Foundation.platform.localeName}
     - Environment: ${config.flavor}
     - Bundle identifier: $bundleIdentifier
     - Version: $version

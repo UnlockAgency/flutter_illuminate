@@ -10,6 +10,11 @@ class PlatformIdentifier extends PlatformIdentifiable {
   }
 
   @override
+  String? get localeName {
+    return io.Platform.localeName;
+  }
+
+  @override
   bool get isAndroid => io.Platform.isAndroid;
 
   @override
