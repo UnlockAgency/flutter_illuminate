@@ -1,17 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:illuminate/foundation.dart';
 
-class DialogAction {
-  final DialogActionType type;
-  final String title;
-  final void Function() onPressed;
+class UniversalDialog {
+  const UniversalDialog({
+    required this.title,
+    required this.message,
+    this.barrierDismissible = true,
+    this.actions = const [],
+  });
 
+  final String title;
+  final String message;
+  final bool barrierDismissible;
+  final List<DialogAction> actions;
+}
+
+class DialogAction {
   const DialogAction({
     required this.type,
     required this.title,
-    required this.onPressed,
+    this.onPressed,
   });
+
+  final DialogActionType type;
+  final String title;
+  final void Function()? onPressed;
 }
 
 enum DialogActionType {
@@ -21,33 +36,42 @@ enum DialogActionType {
 }
 
 class DialogManager extends DialogService {
+  DialogPresentable? _delegate;
+
+  @override
+  void setDelegate(DialogPresentable delegate) {
+    _delegate = delegate;
+  }
+
+  @override
+  Future<void> present({required UniversalDialog dialog}) async {
+    await _delegate?.shouldPresentDialog(dialog: dialog);
+  }
+
   @override
   Future<void> alert(
     BuildContext context, {
-    required String title,
-    required String message,
-    bool barrierDismissible = true,
-    List<DialogAction> actions = const [],
+    required UniversalDialog dialog,
   }) {
     return showDialog(
       context: context,
-      barrierDismissible: barrierDismissible,
+      barrierDismissible: dialog.barrierDismissible,
       builder: (BuildContext context) {
         return WillPopScope(
-          onWillPop: () async => barrierDismissible,
+          onWillPop: () async => dialog.barrierDismissible,
           child: Builder(builder: (context) {
             if (Foundation.platform.isIOS) {
               return _CupertinoAlertDialog(
-                title: title,
-                message: message,
-                actions: actions,
+                title: dialog.title,
+                message: dialog.message,
+                actions: dialog.actions,
               );
             }
 
             return _AlertDialog(
-              title: title,
-              message: message,
-              actions: actions,
+              title: dialog.title,
+              message: dialog.message,
+              actions: dialog.actions,
             );
           }),
         );
@@ -83,7 +107,10 @@ class _AlertDialog extends StatelessWidget {
         }
 
         return TextButton(
-          onPressed: action.onPressed,
+          onPressed: action.onPressed ??
+              () {
+                context.pop();
+              },
           child: Container(
             padding: const EdgeInsets.all(14),
             child: Text(
@@ -120,7 +147,10 @@ class _CupertinoAlertDialog extends StatelessWidget {
         return CupertinoDialogAction(
           isDefaultAction: action.type == DialogActionType.standard,
           isDestructiveAction: action.type == DialogActionType.destructive,
-          onPressed: action.onPressed,
+          onPressed: action.onPressed ??
+              () {
+                context.pop();
+              },
           child: Text(
             action.title,
             style: action.type != DialogActionType.destructive
@@ -136,12 +166,18 @@ class _CupertinoAlertDialog extends StatelessWidget {
 }
 
 abstract class DialogService {
-  //
+  void setDelegate(DialogPresentable delegate);
+
+  Future<void> present({
+    required UniversalDialog dialog,
+  });
+
   Future<void> alert(
     BuildContext context, {
-    required String title,
-    required String message,
-    bool barrierDismissible = true,
-    List<DialogAction> actions = const [],
+    required UniversalDialog dialog,
   });
+}
+
+mixin DialogPresentable {
+  Future<void> shouldPresentDialog({required UniversalDialog dialog});
 }
