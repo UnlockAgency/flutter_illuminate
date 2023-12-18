@@ -7,12 +7,10 @@ Helping you parse the dynamic links your app can receive.
 ### Dynamic Links
 
 ```dart
-final dynamicLinkManager = await DynamicLinkManager.getInstance();
-
 class App extends StatelessWidget implements DynamicLinkDelegate { 
     @override
     Widget build(BuildContext context) { 
-        DynamicLinkManager.getInstance((instance) { 
+        DynamicLinkManager.getInstance().then((instance) { 
             // Register the App as delegate for dynamic links
             instance.setDelegate(this);
         });
@@ -42,12 +40,10 @@ class App extends StatelessWidget implements DynamicLinkDelegate {
 ### Universal Links
 
 ```dart
-final universalLinkManager = await UniversalLinkManager.getInstance();
-
 class App extends StatelessWidget implements UniversalLinkDelegate { 
     @override
     Widget build(BuildContext context) { 
-        UniversalLinkManager.getInstance((instance) { 
+        UniversalLinkManager.getInstance().then((instance) { 
             // Register the App as delegate for dynamic links
             instance.setDelegate(this);
         });
