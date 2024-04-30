@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.2
+
+### New features
+- Allowing no token refresh option for oAuth
+
 ## v1.7.0
 
 ### New features
