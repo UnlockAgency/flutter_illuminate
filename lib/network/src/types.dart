@@ -43,6 +43,7 @@ class OAuthConfig {
   final String? authorizeEndpoint;
   final String? clientSecret;
   final bool pkceEnabled;
+  final bool noTokenRefresh;
 
   OAuthConfig({
     required this.host,
@@ -51,6 +52,7 @@ class OAuthConfig {
     this.authorizeEndpoint,
     this.clientSecret,
     this.pkceEnabled = false,
+    this.noTokenRefresh = false,
   });
 }
 
