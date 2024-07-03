@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.3
+
+### Bugfixes
+- Added an extra check to only fetch one refresh token at a time
+
 ## 1.7.2
 
 ### New features

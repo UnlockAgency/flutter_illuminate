@@ -97,16 +97,17 @@ class OAuthAuthenticator {
   }
 
   Future<String> refreshToken() async {
-    final token = await storageManager.read(storageKeyRefreshToken);
+    final refreshToken = await storageManager.read(storageKeyRefreshToken);
+    final accessToken = await storageManager.read(storageKeyAccessToken);
 
     if (config.noTokenRefresh) {
-      return token ?? '';
+      return refreshToken ?? '';
     }
 
     Map<String, dynamic> body = {
       'grant_type': 'refresh_token',
       'client_id': config.clientId,
-      'refresh_token': token,
+      'refresh_token': refreshToken,
     };
 
     if (config.clientSecret != null) {

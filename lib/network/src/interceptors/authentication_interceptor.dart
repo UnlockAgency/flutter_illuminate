@@ -12,6 +12,8 @@ class AuthenticationInterceptor extends QueuedInterceptor {
   final Future<void> Function()? onAuthenticationFailure;
   final Future<void> Function()? onTokenRefreshFailure;
 
+  bool _isRefreshing = false;
+
   AuthenticationInterceptor({
     required ApiConfig config,
     this.authenticator,
@@ -110,16 +112,21 @@ class AuthenticationInterceptor extends QueuedInterceptor {
       return;
     }
 
-    _refreshToken(requestOptions: err.requestOptions, requestId: requestId).then((token) {
-      return _retryRequest(err.requestOptions, token);
-    }).then((response) {
-      LoggerInterceptor.responseLog(response);
+    // Initiate token refresh if we're not currently refreshing
+    if (!_isRefreshing) {
+      _isRefreshing = true;
+      _refreshToken(requestOptions: err.requestOptions, requestId: requestId).then((token) {
+        return _retryRequest(err.requestOptions, token);
+      }).then((response) {
+        LoggerInterceptor.responseLog(response);
+        _isRefreshing = false;
 
-      handler.resolve(response);
-    }).catchError((error) {
-      logger.e('ERROR[$requestId] => Error getting refresh token from storage', error: error);
-      handler.next(err);
-    });
+        handler.resolve(response);
+      }).catchError((error) {
+        logger.e('ERROR[$requestId] => Error getting refresh token from storage', error: error);
+        handler.next(err);
+      });
+    }
   }
 
   Future<String> _refreshToken({required RequestOptions requestOptions, String? requestId}) {
