@@ -98,7 +98,7 @@ class OAuthAuthenticator {
 
   Future<String> refreshToken() async {
     final refreshToken = await storageManager.read(storageKeyRefreshToken);
-    final accessToken = await storageManager.read(storageKeyAccessToken);
+    // final accessToken = await storageManager.read(storageKeyAccessToken);
 
     if (config.noTokenRefresh) {
       return refreshToken ?? '';

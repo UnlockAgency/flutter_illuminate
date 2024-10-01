@@ -16,7 +16,7 @@ class AppLock extends StatefulWidget {
   final Duration backgroundLockLatency;
 
   const AppLock({
-    Key? key,
+    super.key,
     required this.child,
     required this.router,
     required this.lockScreenRoute,
@@ -25,7 +25,7 @@ class AppLock extends StatefulWidget {
     this.triggerOnLaunch = true,
     this.enabled = true,
     this.backgroundLockLatency = const Duration(seconds: 5),
-  }) : super(key: key);
+  });
 
   // ignore: library_private_types_in_public_api
   static _AppLockState? of(BuildContext context) => context.findAncestorStateOfType<_AppLockState>();

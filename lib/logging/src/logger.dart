@@ -36,7 +36,7 @@ class Logging {
         colors: kDebugMode && Foundation.platform.isAndroid,
         noBoxingByDefault: true,
         methodCount: 0,
-        printTime: true,
+        dateTimeFormat: DateTimeFormat.dateAndTime,
         lineLength: 300,
       ),
     );

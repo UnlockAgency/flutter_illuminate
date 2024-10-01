@@ -57,8 +57,8 @@ class DialogManager extends DialogService {
       context: context,
       barrierDismissible: dialog.barrierDismissible,
       builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => dialog.barrierDismissible,
+        return PopScope(
+          canPop: dialog.barrierDismissible,
           child: Builder(builder: (context) {
             if (Foundation.platform.isIOS) {
               return _CupertinoAlertDialog(

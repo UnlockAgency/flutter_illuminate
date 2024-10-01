@@ -60,7 +60,7 @@ class TrackingManager implements TrackingService {
 
     await FirebaseAnalytics.instance.logEvent(
       name: 'screen_view',
-      parameters: screenViewParameters,
+      parameters: screenViewParameters.map((key, value) => MapEntry(key, value as Object)),
     );
   }
 
@@ -76,7 +76,7 @@ class TrackingManager implements TrackingService {
     logger.d('[Tracking] <Event>: ${event.name}, parameters: ${jsonEncode(parameters)}');
     await FirebaseAnalytics.instance.logEvent(
       name: event.name.value,
-      parameters: parameters,
+      parameters: parameters.map((key, value) => MapEntry(key, value as Object)),
     );
   }
 }

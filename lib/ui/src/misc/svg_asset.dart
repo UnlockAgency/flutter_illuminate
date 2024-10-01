@@ -9,12 +9,11 @@ class SvgAsset extends StatelessWidget {
 
   SvgAsset(
     this.asset, {
-    Key? key,
+    super.key,
     this.size,
     ColorFilter? colorFilter,
     @Deprecated('You should use colorFilter instead') this.color,
-  })  : colorFilter = colorFilter ?? _getColorFilter(color, BlendMode.srcIn),
-        super(key: key);
+  }) : colorFilter = colorFilter ?? _getColorFilter(color, BlendMode.srcIn);
 
   static ColorFilter? _getColorFilter(Color? color, BlendMode colorBlendMode) => color == null
       ? null

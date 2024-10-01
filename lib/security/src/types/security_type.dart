@@ -1,5 +1,3 @@
-library security;
-
 enum SecurityType {
   pincode("pincode"),
   biometric("biometric");

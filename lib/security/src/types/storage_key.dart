@@ -1,5 +1,3 @@
-library security;
-
 enum StorageKey {
   securityType('security_type'),
   pincode('pincode');

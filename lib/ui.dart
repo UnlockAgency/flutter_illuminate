@@ -1,5 +1,3 @@
-library illuminate;
-
 export 'ui/src/flex/spaced_column.dart' show SpacedColumn;
 export 'ui/src/flex/spaced_row.dart' show SpacedRow;
 

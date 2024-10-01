@@ -1,5 +1,3 @@
-library illuminate;
-
 export 'network/src/utils.dart' show storageKeyAccessToken, storageKeyRefreshToken;
 
 export 'network/src/pkce.dart' show PKCEPair;

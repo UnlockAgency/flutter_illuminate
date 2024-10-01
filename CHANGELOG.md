@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0
+
+### Flutter upgrade
+- Upgraded all packages to latest
+- Removed deprecated code
+- Added EdgeToEdgeWrapper
+
 ## 1.7.3
 
 ### Bugfixes
