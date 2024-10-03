@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.1
+
+### Bugfixes
+- Added small changes to iOS SecureStorage options to avoid no data on start-up
+
 ## 1.8.0
 
 ### Flutter upgrade

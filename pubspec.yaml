@@ -2,7 +2,7 @@ publish_to: none
 
 name: illuminate
 description: A flutter package to reduce boilerplate code.
-version: 1.8.0
+version: 1.8.1
 homepage:
 
 environment:

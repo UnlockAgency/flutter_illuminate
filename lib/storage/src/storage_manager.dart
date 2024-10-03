@@ -14,9 +14,10 @@ class StorageManager {
   }) {
     _storage = FlutterSecureStorage(
       iOptions: IOSOptions(
+        synchronizable: false,
         groupId: iosConfig?.groupId,
         accountName: iosConfig?.accountName,
-        accessibility: iosConfig?.accessibility ?? KeychainAccessibility.unlocked,
+        accessibility: iosConfig?.accessibility ?? KeychainAccessibility.first_unlock,
       ),
       aOptions: AndroidOptions(
         sharedPreferencesName: null,
