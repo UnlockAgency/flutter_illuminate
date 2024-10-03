@@ -4,6 +4,7 @@
 
 ### Bugfixes
 - Added small changes to iOS SecureStorage options to avoid no data on start-up
+- More logging and error handling in StorageManager
 
 ## 1.8.0
 

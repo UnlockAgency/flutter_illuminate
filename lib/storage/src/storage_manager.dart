@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:illuminate/utils.dart';
 
 class StorageManager {
   final String prefix;
@@ -38,35 +39,71 @@ class StorageManager {
   }
 
   Future<String?> read(String key) async {
-    return await _storage.read(
-      key: _key(key),
-    );
+    try {
+      return await _storage.read(
+        key: _key(key),
+      );
+    } catch (e, stackTrace) {
+      logger.e(
+        '[StorageManager] => Error reading key: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+
+      return null;
+    }
   }
 
   Future<Map<String, dynamic>?> readJson(String key) async {
-    String? contents = await _storage.read(
-      key: _key(key),
-    );
+    try {
+      String? contents = await _storage.read(
+        key: _key(key),
+      );
 
-    if (contents == null) {
+      if (contents == null) {
+        return null;
+      }
+
+      return jsonDecode(contents);
+    } catch (e, stackTrace) {
+      logger.e(
+        '[StorageManager] => Error reading key with JSON: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+
       return null;
     }
-
-    return jsonDecode(contents);
   }
 
   Future<void> write(String key, String? value) async {
-    return await _storage.write(
-      key: _key(key),
-      value: value,
-    );
+    try {
+      return await _storage.write(
+        key: _key(key),
+        value: value,
+      );
+    } catch (e, stackTrace) {
+      logger.e(
+        '[StorageManager] => Error writing value key: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<void> writeJson(String key, Map<String, dynamic>? value) async {
-    return await _storage.write(
-      key: _key(key),
-      value: jsonEncode(value),
-    );
+    try {
+      return await _storage.write(
+        key: _key(key),
+        value: jsonEncode(value),
+      );
+    } catch (e, stackTrace) {
+      logger.e(
+        '[StorageManager] => Error writing json to key: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<void> delete(String key) async {
