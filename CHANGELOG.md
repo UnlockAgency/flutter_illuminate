@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.9.0
+- Uni links to app links
+
 ## 1.8.1
 
 ### Bugfixes

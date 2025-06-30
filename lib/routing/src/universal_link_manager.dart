@@ -1,8 +1,10 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/services.dart';
 import 'package:illuminate/utils.dart';
-import 'package:uni_links/uni_links.dart';
 
 class UniversalLinkManager {
+  static AppLinks _appLinks = AppLinks();
+
   static UniversalLinkManager? _instance;
   static UniversalLinkManager? get instance {
     return _instance;
@@ -11,7 +13,7 @@ class UniversalLinkManager {
   UniversalLinkManager._({Uri? initialUri}) {
     _initialUri = initialUri;
 
-    uriLinkStream.listen((Uri? uri) {
+    _appLinks.uriLinkStream.listen((Uri? uri) {
       if (uri == null) {
         return;
       }
@@ -35,7 +37,7 @@ class UniversalLinkManager {
     Uri? initialUri;
 
     try {
-      initialUri = await getInitialUri();
+      initialUri = await _appLinks.getInitialLink();
     } on PlatformException catch (error) {
       logger.e(error);
     }
