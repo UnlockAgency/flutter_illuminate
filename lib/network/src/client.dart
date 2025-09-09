@@ -58,11 +58,7 @@ class Client {
           method: request.httpMethod.name,
           headers: request.headers,
           responseType: ResponseType.json,
-          extra: (request.extra ?? {})
-            ..addAll({
-              'id': requestId,
-              'authentication': request.authentication.name,
-            }),
+          extra: (request.extra ?? {})..addAll({'id': requestId, 'authentication': request.authentication.name}),
         ),
       );
 
@@ -116,12 +112,13 @@ class Client {
     return await _oAuthAuthenticator!.refreshToken();
   }
 
-  setAuthenticationDelegate(AuthenticationDelegate delegate) => _authenticationDelegate = delegate;
+  AuthenticationDelegate setAuthenticationDelegate(AuthenticationDelegate delegate) => _authenticationDelegate = delegate;
   Future<void> _onAuthenticationFailure() async {
     await _authenticationDelegate?.onAuthenticationFailure();
   }
 
-  setOAuthAuthenticationDelegate(OAuthAuthenticationDelegate delegate) => _oAuthAuthenticationDelegate = delegate;
+  OAuthAuthenticationDelegate setOAuthAuthenticationDelegate(OAuthAuthenticationDelegate delegate) =>
+      _oAuthAuthenticationDelegate = delegate;
   Future<void> _onTokenRefreshFailure() async {
     await _oAuthAuthenticationDelegate?.onTokenRefreshFailure();
   }
@@ -135,9 +132,7 @@ class Client {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     Random random = Random();
 
-    return String.fromCharCodes(
-      Iterable.generate(4, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
-    );
+    return String.fromCharCodes(Iterable.generate(4, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
   }
 }
 

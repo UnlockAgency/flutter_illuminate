@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:illuminate/common/src/extensions.dart';
 import 'package:illuminate/state/src/providable.dart';
 import 'package:illuminate/state/src/state_manager.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class Consumable<T extends Providable> extends StatelessWidget {
                   opacity: provider.status.isUpdating ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 100),
                   child: Container(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withOpacitySafe(0.5),
                     child: _loadingIndicator(),
                   ),
                 ),

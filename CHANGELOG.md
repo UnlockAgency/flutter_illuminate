@@ -1,5 +1,13 @@
 # Changelog
 
+
+# 2.0.0
+- Upgraded Dart SDK
+- Upgraded Flutter SDK
+- Removed deprecated code
+- Removed DynamicLinks
+- Fit for Flutter 3.35.3
+
 # 1.9.0
 - Uni links to app links
 

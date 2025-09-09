@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:illuminate/common/src/extensions.dart';
 
 class LoadingStack extends StatefulWidget {
   final Widget child;
@@ -26,7 +27,7 @@ class _LoadingStackState extends State<LoadingStack> {
             duration: const Duration(milliseconds: 300),
             child: Center(
               child: Container(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withOpacitySafe(0.2),
                 child: Align(
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(

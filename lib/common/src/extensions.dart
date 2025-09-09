@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 extension IterableExtension<E> on Iterable<E> {
   E? firstOrNull(bool Function(E element) test) {
@@ -25,17 +26,14 @@ extension IterableExtension<E> on Iterable<E> {
 
 extension ListExtension<E> on List<E> {
   List<E> insertBetween(E element) {
-    return fold<List<E>>(
-      [],
-      (result, widget) {
-        if (result.isNotEmpty) {
-          result.add(element);
-        }
+    return fold<List<E>>([], (result, widget) {
+      if (result.isNotEmpty) {
+        result.add(element);
+      }
 
-        result.add(widget);
-        return result;
-      },
-    );
+      result.add(widget);
+      return result;
+    });
   }
 
   List<T> mapList<T>(T Function(E e) toElement) {
@@ -75,9 +73,20 @@ extension ColorExtension on Color {
   Map<int, Color> swatch() {
     final map = <int, Color>{};
     for (var alpha in [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]) {
-      map[(alpha * 1000).toInt()] = Color.fromRGBO(red, green, blue, alpha);
+      map[(alpha * 1000).toInt()] = Color.fromRGBO(
+        (r * 255.0).round() & 0xff,
+        (g * 255.0).round() & 0xff,
+        (b * 255.0).round() & 0xff,
+        alpha,
+      );
     }
 
     return map;
+  }
+}
+
+extension SafeOpacity on Color {
+  Color withOpacitySafe(double opacity) {
+    return withAlpha((opacity.clamp(0.0, 1.0) * 255).round());
   }
 }

@@ -82,8 +82,8 @@ class BottomSheetPicker extends StatelessWidget with SafeAreaMixin {
   Widget _button(String title, {required void Function() onPressed, bool cancellation = false}) {
     return CupertinoButton(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      minSize: 32,
       onPressed: onPressed,
+      minimumSize: Size(32, 32),
       child: Text(
         title,
         style: TextStyle(

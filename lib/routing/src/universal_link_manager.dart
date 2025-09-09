@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:illuminate/utils.dart';
 
 class UniversalLinkManager {
-  static AppLinks _appLinks = AppLinks();
+  static final AppLinks _appLinks = AppLinks();
 
   static UniversalLinkManager? _instance;
   static UniversalLinkManager? get instance {

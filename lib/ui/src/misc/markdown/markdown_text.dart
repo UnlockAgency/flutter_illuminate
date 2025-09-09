@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:illuminate/common.dart';
 
-enum MarkdownContainer {
-  listView,
-  column;
-}
+enum MarkdownContainer { listView, column }
 
 class MarkdownText extends StatelessWidget {
   const MarkdownText(
@@ -47,16 +44,10 @@ class MarkdownText extends StatelessWidget {
       );
     }
 
-    return MarkdownBody(
-      shrinkWrap: true,
-      selectable: selectable,
-      data: text,
-      styleSheet: stylesheet,
-      onTapLink: _onTapLink,
-    );
+    return MarkdownBody(shrinkWrap: true, selectable: selectable, data: text, styleSheet: stylesheet, onTapLink: _onTapLink);
   }
 
-  void _onTapLink(text, url, title) {
+  void _onTapLink(dynamic text, dynamic url, dynamic title) {
     onTapLink?.call(url);
 
     if (url != null) {
