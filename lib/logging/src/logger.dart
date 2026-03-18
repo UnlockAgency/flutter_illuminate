@@ -30,6 +30,7 @@ class Logging {
     print('Setting up logger..');
 
     _logger = Logger(
+      level: (kIsWeb && kReleaseMode) ? Level.error : Level.trace,
       filter: LoggingFilter(logLevel: level),
       printer: PrettyPrinter(
         // Disable colors for iOS (rendering doesn't work properly) and also for release builds
@@ -87,10 +88,9 @@ class CloudLogger {
       throw InvalidServiceAccountException(message: 'The service account could not be parsed to a Map<String, dynamic>');
     }
 
-    final httpClient = await clientViaServiceAccount(
-      ServiceAccountCredentials.fromJson(_serviceAccount),
-      [LoggingApi.loggingWriteScope],
-    );
+    final httpClient = await clientViaServiceAccount(ServiceAccountCredentials.fromJson(_serviceAccount), [
+      LoggingApi.loggingWriteScope,
+    ]);
 
     _cloudLogger = LoggingApi(httpClient);
   }
@@ -101,24 +101,16 @@ class CloudLogger {
       return;
     }
 
-    final params = {
-      'id': id,
-    }..addAll(labels ?? {});
+    final params = {'id': id}..addAll(labels ?? {});
 
     final logEntry = LogEntry(
       logName: 'projects/$projectId/logs/app',
-      jsonPayload: {
-        'message': message,
-      },
-      resource: MonitoredResource(
-        type: 'global',
-      ),
+      jsonPayload: {'message': message},
+      resource: MonitoredResource(type: 'global'),
       labels: params,
     );
 
-    final request = WriteLogEntriesRequest(
-      entries: [logEntry],
-    );
+    final request = WriteLogEntriesRequest(entries: [logEntry]);
 
     _cloudLogger!.entries.write(request);
   }

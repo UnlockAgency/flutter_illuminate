@@ -1,5 +1,7 @@
 # Changelog
 
+# 2.0.1
+- Fixed logging level filter
 
 # 2.0.0
 - Upgraded Dart SDK
